@@ -198,8 +198,8 @@ const Layout = ({ children }) => {
             <img src="/sm_groups_logo.png" alt="THE SM GROUPS" className="w-full h-full object-contain" />
           </div>
           <div>
-            <span className="font-extrabold text-sm text-slate-900 tracking-tight block leading-none">THE SM GROUPS</span>
-            <span className="text-[10px] text-slate-400 font-semibold block mt-0.5">Enterprise Portal</span>
+            <span className="font-extrabold text-base text-slate-900 tracking-tight block leading-none">THE SM GROUPS</span>
+            <span className="text-[11px] text-slate-500 font-bold block mt-0.5">Enterprise Portal</span>
           </div>
         </div>
 
@@ -231,7 +231,7 @@ const Layout = ({ children }) => {
               <div className="w-8 h-8 bg-white border border-slate-200 rounded-lg p-1 flex items-center justify-center shrink-0">
                 <img src="/sm_groups_logo.png" alt="THE SM GROUPS" className="w-full h-full object-contain" />
               </div>
-              <span className="font-bold text-sm text-slate-900">THE SM GROUPS</span>
+              <span className="font-extrabold text-base text-slate-900">THE SM GROUPS</span>
             </div>
             <button
               onClick={() => setMobileMenuOpen(false)}
@@ -242,8 +242,8 @@ const Layout = ({ children }) => {
           </div>
 
           <div className="bg-white flex-1 p-4 overflow-y-auto space-y-4 shadow-xl">
-            <nav className="space-y-1.5">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+            <nav className="space-y-2">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5">
                 {isAdmin ? 'Admin Console' : 'Workspace Navigation'}
               </p>
               {links.map((link) => {
@@ -254,22 +254,22 @@ const Layout = ({ children }) => {
                     key={link.path}
                     to={link.path}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-semibold transition-all ${
+                    className={`flex items-center justify-between px-4 py-3.5 rounded-xl text-sm font-bold transition-all ${
                       isActive
-                        ? 'bg-slate-900 text-white shadow-xs'
+                        ? 'bg-slate-900 text-white shadow-sm'
                         : 'bg-slate-50 text-slate-800 border border-slate-200/70 hover:bg-slate-100'
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-600'}`} />
+                    <div className="flex items-center gap-3.5">
+                      <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-slate-500'}`} />
                       <span>{link.name}</span>
                     </div>
-                    {isActive && <ChevronRight className="w-4 h-4 text-slate-400" />}
+                    {isActive && <ChevronRight className="w-5 h-5 text-slate-400" />}
                   </Link>
                 );
               })}
 
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-5 mb-2">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mt-6 mb-2.5">
                 Utilities
               </p>
               {publicLinks.map((link) => {
@@ -280,17 +280,17 @@ const Layout = ({ children }) => {
                     key={link.path}
                     to={link.path}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-semibold transition-all ${
+                    className={`flex items-center justify-between px-4 py-3.5 rounded-xl text-sm font-bold transition-all ${
                       isActive
                         ? 'bg-slate-900 text-white shadow-xs'
                         : 'bg-slate-50 text-slate-800 border border-slate-200/70 hover:bg-slate-100'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-600'}`} />
+                      <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-slate-600'}`} />
                       <span>{link.name}</span>
                     </div>
-                    <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+                    <ExternalLink className={`w-5 h-5 ${isActive ? 'text-white/70' : 'text-slate-400'}`} />
                   </Link>
                 );
               })}
