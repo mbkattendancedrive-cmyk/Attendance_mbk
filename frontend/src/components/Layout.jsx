@@ -154,12 +154,14 @@ const Layout = ({ children }) => {
         <div className="pt-3 mt-2 border-t border-slate-100">
           {isCollapsed ? (
             <div className="flex flex-col items-center gap-2">
-              <div 
-                className="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center font-semibold text-xs shrink-0 shadow-2xs"
-                title={`${user?.name} (${user?.role})`}
-              >
-                {user?.name ? user.name[0].toUpperCase() : 'U'}
-              </div>
+              <Link to={isAdmin ? '#' : '/employee/profile'} className="shrink-0">
+                <div 
+                  className="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center font-semibold text-xs shadow-2xs hover:ring-2 hover:ring-slate-400/50 cursor-pointer transition-all"
+                  title={`${user?.name} (${user?.role})`}
+                >
+                  {user?.name ? user.name[0].toUpperCase() : 'U'}
+                </div>
+              </Link>
               <button
                 onClick={handleLogout}
                 title="Logout"
@@ -170,7 +172,7 @@ const Layout = ({ children }) => {
             </div>
           ) : (
             <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200/70">
-              <div className="flex items-center gap-2.5 overflow-hidden">
+              <Link to={isAdmin ? '#' : '/employee/profile'} className="flex items-center gap-2.5 overflow-hidden hover:opacity-80 transition-opacity">
                 <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-semibold text-xs shrink-0 shadow-2xs">
                   {user?.name ? user.name[0].toUpperCase() : 'U'}
                 </div>
@@ -178,7 +180,7 @@ const Layout = ({ children }) => {
                   <p className="text-xs font-semibold text-slate-900 truncate leading-tight">{user?.name}</p>
                   <p className="text-[10px] text-slate-500 capitalize">{user?.role}</p>
                 </div>
-              </div>
+              </Link>
               <button
                 onClick={handleLogout}
                 title="Logout"
@@ -204,13 +206,15 @@ const Layout = ({ children }) => {
         </div>
 
         <div className="flex items-center gap-2">
-          {user?.profilePhoto ? (
-            <img src={user.profilePhoto} alt={user?.name} className="w-7 h-7 rounded-full object-cover border border-slate-200" />
-          ) : (
-            <div className="w-7 h-7 rounded-full bg-slate-900 text-white font-bold text-xs flex items-center justify-center">
-              {user?.name?.[0]}
-            </div>
-          )}
+          <Link to={isAdmin ? '#' : '/employee/profile'} onClick={() => setMobileMenuOpen(false)} className="block shrink-0">
+            {user?.profilePhoto ? (
+              <img src={user.profilePhoto} alt={user?.name} className="w-7 h-7 rounded-full object-cover border border-slate-200 hover:ring-2 hover:ring-slate-300 transition-all cursor-pointer" />
+            ) : (
+              <div className="w-7 h-7 rounded-full bg-slate-900 text-white font-bold text-xs flex items-center justify-center hover:ring-2 hover:ring-slate-300 transition-all cursor-pointer">
+                {user?.name?.[0]}
+              </div>
+            )}
+          </Link>
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

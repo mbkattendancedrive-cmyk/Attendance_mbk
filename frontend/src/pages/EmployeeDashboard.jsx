@@ -60,14 +60,18 @@ const EmployeeDashboard = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 w-full md:w-auto justify-end">
-          <Link to="/employee/tasks" className="btn-primary text-xs">
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
+          <Link to="/employee/attendance" className="btn-primary text-xs bg-emerald-600 hover:bg-emerald-700 focus:ring-emerald-600/20 shadow-emerald-600/10 shadow-sm border border-emerald-500/20">
             <CheckSquare className="w-4 h-4" />
+            Check In
+          </Link>
+          <Link to="/employee/tasks" className="btn-secondary text-xs bg-white">
+            <CheckSquare className="w-4 h-4 text-slate-500" />
             My Tasks
           </Link>
-          <Link to={`/verify/${user?.employeeId}`} target="_blank" className="btn-secondary text-xs">
+          <Link to={`/verify/${user?.employeeId}`} target="_blank" className="btn-secondary text-xs bg-white">
             <QrCode className="w-4 h-4 text-slate-500" />
-            Public Badge
+            Badge
           </Link>
         </div>
       </div>
