@@ -119,14 +119,8 @@ const QRScannerPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-dot-pattern text-slate-900 flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      
-      {/* Decorative Ambient Gradient Orbs */}
-      <div className="w-96 h-96 bg-indigo-200/30 rounded-full blur-3xl absolute -top-10 -right-20 pointer-events-none" />
-      <div className="w-96 h-96 bg-slate-200/40 rounded-full blur-3xl absolute -bottom-10 -left-20 pointer-events-none" />
-
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col items-center justify-center p-4 relative">
       <div id="qr-file-reader-temp" className="hidden"></div>
-
       <div className="w-full max-w-md space-y-4 relative z-10 animate-fade-in">
         {/* Header */}
         <div className="flex items-center justify-between px-1">

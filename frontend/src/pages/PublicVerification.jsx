@@ -56,12 +56,7 @@ const PublicVerification = () => {
   }
 
   return (
-    <div className="min-h-screen bg-dot-pattern text-slate-900 flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden">
-      
-      {/* Decorative Ambient Gradient Orbs */}
-      <div className="w-96 h-96 bg-emerald-200/30 rounded-full blur-3xl absolute -top-10 -left-20 pointer-events-none" />
-      <div className="w-96 h-96 bg-indigo-200/30 rounded-full blur-3xl absolute -bottom-10 -right-20 pointer-events-none" />
-
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col items-center justify-center p-4 sm:p-6 relative">
       <div className="w-full max-w-md space-y-5 animate-fade-in relative z-10">
         
         {/* Header Branding */}

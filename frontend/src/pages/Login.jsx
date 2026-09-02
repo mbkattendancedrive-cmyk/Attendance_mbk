@@ -46,17 +46,17 @@ const Login = () => {
       <div className="w-full max-w-md space-y-6 relative z-10 animate-fade-in">
         {/* Brand Header */}
         <div className="text-center space-y-3">
-          <div className="w-14 h-14 bg-white p-2.5 rounded-2xl shadow-sm inline-flex items-center justify-center border border-slate-200/90">
+          <div className="w-32 h-32 bg-white p-4 rounded-3xl shadow-lg inline-flex items-center justify-center border-2 border-slate-300/90">
             <img src="/sm_groups_logo.png" alt="THE SM GROUPS" className="w-full h-full object-contain" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Sign in to SM Groups</h1>
-            <p className="text-xs text-slate-500 font-normal mt-1">Enterprise Management & Verification Platform</p>
+            <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Sign in to SM Groups</h1>
+            <p className="text-xs text-slate-500 font-semibold mt-1">Enterprise Management & Verification Platform</p>
           </div>
         </div>
 
-        {/* Login Card */}
-        <div className="bg-white rounded-2xl p-7 border border-slate-200/90 shadow-sm space-y-5">
+        {/* Login Card with Crisp High-Contrast Border */}
+        <div className="bg-white rounded-3xl p-7 border-2 border-slate-300/90 shadow-md space-y-5">
           {error && (
             <div className="p-3.5 bg-rose-50 border border-rose-200/80 text-rose-700 rounded-xl text-xs font-semibold flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />

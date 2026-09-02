@@ -58,7 +58,7 @@ const Layout = ({ children }) => {
   const links = isAdmin ? adminLinks : employeeLinks;
 
   return (
-    <div className="min-h-screen bg-grid-pattern text-slate-900 flex flex-col md:flex-row font-sans overflow-x-hidden md:h-screen md:overflow-hidden">
+    <div className="min-h-screen bg-slate-50/70 text-slate-900 flex flex-col md:flex-row font-sans overflow-x-hidden md:h-screen md:overflow-hidden">
       
       {/* Collapsible Sidebar for Desktop */}
       <aside className={`hidden md:flex flex-col ${isCollapsed ? 'w-18 p-2.5' : 'w-64 p-4'} bg-white border-r border-slate-200/80 h-screen justify-between z-30 shrink-0 transition-all duration-200 ease-in-out select-none`}>
@@ -66,7 +66,7 @@ const Layout = ({ children }) => {
           {/* Header Branding */}
           <div className={`flex items-center ${isCollapsed ? 'flex-col gap-2 justify-center' : 'justify-between'} pb-4 mb-4 border-b border-slate-100`}>
             <div className="flex items-center gap-3 overflow-hidden">
-              <div className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200/90 p-1 flex items-center justify-center shrink-0 shadow-2xs">
+              <div className="w-10 h-10 rounded-xl bg-white border border-slate-300 p-1.5 flex items-center justify-center shrink-0 shadow-2xs">
                 <img src="/sm_groups_logo.png" alt="THE SM GROUPS" className="w-full h-full object-contain" />
               </div>
               {!isCollapsed && (
@@ -194,7 +194,7 @@ const Layout = ({ children }) => {
       {/* Mobile Header Bar */}
       <header className="md:hidden bg-white border-b border-slate-200/80 px-4 py-3 sticky top-0 z-40 flex items-center justify-between shadow-2xs">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-white border border-slate-200 rounded-lg p-1 shadow-2xs flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 bg-white border border-slate-300 rounded-xl p-1.5 shadow-2xs flex items-center justify-center shrink-0">
             <img src="/sm_groups_logo.png" alt="THE SM GROUPS" className="w-full h-full object-contain" />
           </div>
           <div>
