@@ -179,6 +179,9 @@ export const updateEmployee = async (req, res) => {
       if (req.body.joiningDate) {
         employee.joiningDate = req.body.joiningDate;
       }
+      if (req.body.password) {
+        employee.password = req.body.password;
+      }
 
       const updatedEmployee = await employee.save();
 
