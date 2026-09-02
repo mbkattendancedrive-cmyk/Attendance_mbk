@@ -284,10 +284,10 @@ const AttendanceManagement = () => {
                               href={`https://www.google.com/maps?q=${r.location.lat},${r.location.lng}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-sky-700 hover:text-sky-900 transition-colors max-w-[200px]"
+                              className="inline-flex items-start gap-1 text-sky-700 hover:text-sky-900 transition-colors"
                             >
-                              <MapPin className="w-3.5 h-3.5 shrink-0" />
-                              <span className="text-[11px] font-bold truncate" title={r.location.address || 'View Map'}>
+                              <MapPin className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                              <span className="text-[11px] font-bold whitespace-normal break-words leading-tight" title={r.location.address || 'View Map'}>
                                 {r.location.address || 'View Map'}
                               </span>
                             </a>

@@ -594,10 +594,10 @@ const EmployeeAttendance = () => {
                             href={`https://www.google.com/maps?q=${record.location.lat},${record.location.lng}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-sky-700 hover:text-sky-900 transition-colors max-w-[150px]"
+                            className="inline-flex items-start gap-1 text-sky-700 hover:text-sky-900 transition-colors"
                           >
-                            <MapPin className="w-3.5 h-3.5 shrink-0" />
-                            <span className="text-[11px] font-bold truncate" title={record.location.address || 'Map'}>
+                            <MapPin className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                            <span className="text-[11px] font-bold whitespace-normal break-words leading-tight" title={record.location.address || 'Map'}>
                               {record.location.address || 'Map'}
                             </span>
                           </a>
