@@ -83,14 +83,22 @@ export const createEmployee = async (req, res) => {
   try {
     const { name, email, phone, department, designation, dateOfBirth, joiningDate, address, emergencyContact, bloodGroup, profilePhoto } = req.body;
 
-    const employeeExists = await Employee.findOne({ email });
+    const customId = req.body.employeeId;
+    const query = customId ? { $or: [{ email }, { employeeId: customId }] } : { email };
+    const employeeExists = await Employee.findOne(query);
     if (employeeExists) {
-      return res.status(400).json({ message: 'Employee with this email already exists' });
+      if (employeeExists.email === email) {
+        return res.status(400).json({ message: 'Employee with this email already exists' });
+      }
+      return res.status(400).json({ message: 'Employee with this Employee ID already exists' });
     }
 
-    // Generate unique employee ID (e.g. TSMGS001)
-    const count = await Employee.countDocuments();
-    const employeeId = `TSMGS${(count + 1).toString().padStart(3, '0')}`;
+    // Generate unique employee ID if not explicitly provided
+    let employeeId = customId;
+    if (!employeeId) {
+      const count = await Employee.countDocuments();
+      employeeId = `TSMGS${(count + 1).toString().padStart(3, '0')}`;
+    }
     
     // Default password for new employees (can be changed later)
     const password = 'Password@123';
@@ -100,7 +108,7 @@ export const createEmployee = async (req, res) => {
       name,
       email,
       password,
-      phone,
+      phone: phone || '9876543210',
       department,
       designation,
       joiningDate: joiningDate || new Date(),

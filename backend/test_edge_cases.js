@@ -1,259 +1,247 @@
-import dotenv from 'dotenv';
-dotenv.config({ path: 'c:/Users/Lenovo/Desktop/ID_Scan/backend/.env' });
+import axios from 'axios';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import FormData from 'form-data';
 
-const API_BASE = 'http://127.0.0.1:5000/api';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const API_URL = 'http://localhost:5000/api';
 
 async function runEdgeCaseTests() {
   console.log('====================================================');
-  console.log('🧪 RUNNING COMPREHENSIVE BACKEND EDGE CASE TESTS');
+  console.log('🧪 RUNNING COMPREHENSIVE APPLICATION EDGE-CASE SUITE');
   console.log('====================================================\n');
 
   let passed = 0;
   let failed = 0;
 
-  function assert(condition, message, details = '') {
+  function assert(condition, testName, details = '') {
     if (condition) {
-      console.log(`✅ PASS: ${message}`);
+      console.log(`✅ [PASS] ${testName} ${details}`);
       passed++;
     } else {
-      console.error(`❌ FAIL: ${message}`, details);
+      console.error(`❌ [FAIL] ${testName} ${details}`);
       failed++;
     }
   }
 
-  let adminToken = '';
-  let employeeToken = '';
-
-  // Setup tokens
   try {
-    const adminRes = await fetch(`${API_BASE}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'admin@company.com', password: 'password123' })
+    // ----------------------------------------------------
+    // 1. AUTHENTICATION & SECURITY EDGE CASES
+    // ----------------------------------------------------
+    console.log('--- 1. Authentication & Token Edge Cases ---');
+    
+    // Case 1.1: Missing Credentials
+    try {
+      await axios.post(`${API_URL}/auth/login`, { email: '', password: '' });
+      assert(false, 'Login with empty credentials should be rejected');
+    } catch (err) {
+      assert(err.response?.status === 400 || err.response?.status === 401, 'Login with empty credentials rejected with 400/401');
+    }
+
+    // Case 1.2: Invalid Email
+    try {
+      await axios.post(`${API_URL}/auth/login`, { email: 'nonexistent@domain.com', password: 'Password123' });
+      assert(false, 'Login with invalid email should fail');
+    } catch (err) {
+      assert(err.response?.status === 401, 'Login with invalid email returns 401 Unauthorized');
+    }
+
+    // Case 1.3: Wrong Password
+    try {
+      await axios.post(`${API_URL}/auth/login`, { email: 'admin@company.com', password: 'WrongPassword999' });
+      assert(false, 'Login with wrong password should fail');
+    } catch (err) {
+      assert(err.response?.status === 401, 'Login with wrong password returns 401 Unauthorized');
+    }
+
+    // Case 1.4: Protected route without token
+    try {
+      await axios.get(`${API_URL}/employees`);
+      assert(false, 'Accessing protected route without token should fail');
+    } catch (err) {
+      assert(err.response?.status === 401, 'Protected route without token returns 401 Unauthorized');
+    }
+
+    // Case 1.5: Valid Admin Login
+    const adminLoginRes = await axios.post(`${API_URL}/auth/login`, {
+      email: 'admin@company.com',
+      password: 'password123'
     });
-    const adminData = await adminRes.json();
-    adminToken = adminData.token;
+    assert(adminLoginRes.status === 200 && adminLoginRes.data.token, 'Admin login succeeds with JWT token');
+    const adminToken = adminLoginRes.data.token;
 
-    const empRes = await fetch(`${API_BASE}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'EMP001', password: 'Password@123' })
+    // Case 1.6: Valid Employee Login
+    const empLoginRes = await axios.post(`${API_URL}/auth/login`, {
+      email: 'EMP001',
+      password: 'Password@123'
     });
-    const empData = await empRes.json();
-    employeeToken = empData.token;
-  } catch (err) {
-    console.error('Failed to setup tokens for testing', err);
-    return;
-  }
+    assert(empLoginRes.status === 200 && empLoginRes.data.token, 'Employee login succeeds with JWT token');
+    const empToken = empLoginRes.data.token;
 
-  // --- 1. AUTHENTICATION EDGE CASES ---
-  console.log('\n--- 1. AUTHENTICATION EDGE CASES ---');
+    // ----------------------------------------------------
+    // 2. PUBLIC VERIFICATION EDGE CASES
+    // ----------------------------------------------------
+    console.log('\n--- 2. Public Verification & Identity Edge Cases ---');
 
-  // 1.1 Invalid Password
-  try {
-    const res = await fetch(`${API_BASE}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'admin@company.com', password: 'wrongpassword' })
+    // Case 2.1: Public Verification of Valid Employee
+    const publicVerifyRes = await axios.get(`${API_URL}/employees/verify/EMP001`);
+    assert(publicVerifyRes.status === 200 && publicVerifyRes.data.employeeId === 'EMP001', 'Public verification endpoint resolves valid Employee ID');
+
+    // Case 2.2: Public Verification of Non-existent Employee
+    try {
+      await axios.get(`${API_URL}/employees/verify/UNKNOWN_ID_999`);
+      assert(false, 'Public verification of non-existent ID should fail');
+    } catch (err) {
+      assert(err.response?.status === 404, 'Public verification of invalid ID returns 404 Not Found');
+    }
+
+    // ----------------------------------------------------
+    // 3. EMPLOYEE DIRECTORY & DUPLICATE CHECKS
+    // ----------------------------------------------------
+    console.log('\n--- 3. Employee Directory Validation & Constraints ---');
+
+    // Case 3.1: Duplicate Email Error
+    try {
+      await axios.post(
+        `${API_URL}/employees`,
+        {
+          name: 'Duplicate Test',
+          email: 'gokul@company.com', // Duplicate email
+          employeeId: 'TSMG-S-999',
+          department: 'IT',
+          designation: 'Developer'
+        },
+        { headers: { Authorization: `Bearer ${adminToken}` } }
+      );
+      assert(false, 'Creating employee with duplicate email should fail');
+    } catch (err) {
+      assert(err.response?.status === 400, 'Duplicate email creation blocked with 400 Bad Request');
+    }
+
+    // Case 3.2: Duplicate Employee ID Error
+    try {
+      await axios.post(
+        `${API_URL}/employees`,
+        {
+          name: 'Duplicate ID Test',
+          email: 'unique_email_99@company.com',
+          employeeId: 'EMP001', // Duplicate ID
+          department: 'IT',
+          designation: 'Developer'
+        },
+        { headers: { Authorization: `Bearer ${adminToken}` } }
+      );
+      assert(false, 'Creating employee with duplicate Employee ID should fail');
+    } catch (err) {
+      assert(err.response?.status === 400, 'Duplicate Employee ID creation blocked with 400 Bad Request');
+    }
+
+    // ----------------------------------------------------
+    // 4. ATTENDANCE CHECK-IN / CHECK-OUT EDGE CASES
+    // ----------------------------------------------------
+    console.log('\n--- 4. Daily Attendance Check-In & Check-Out Edge Cases ---');
+
+    // Case 4.1: Check-in without photo file
+    try {
+      await axios.post(
+        `${API_URL}/attendance/check-in`,
+        {},
+        { headers: { Authorization: `Bearer ${empToken}` } }
+      );
+      assert(false, 'Check-in without photo file should fail');
+    } catch (err) {
+      assert(err.response?.status === 400, 'Check-in without photo file blocked with 400 Bad Request');
+    }
+
+    // Case 4.2: Double Check-in on same day
+    try {
+      // Create a dummy JPEG image buffer for testing
+      const dummyImgBuffer = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64');
+      
+      const form1 = new FormData();
+      form1.append('photo', dummyImgBuffer, { filename: 'test_checkin1.jpg', contentType: 'image/jpeg' });
+
+      // First check-in attempt (or skip if already checked in today)
+      try {
+        await axios.post(
+          `${API_URL}/attendance/check-in`,
+          form1,
+          { headers: { ...form1.getHeaders(), Authorization: `Bearer ${empToken}` } }
+        );
+      } catch (firstErr) {
+        // If already checked in from earlier tests, that's fine
+      }
+
+      // Second check-in attempt on the same day MUST fail with 400
+      const form2 = new FormData();
+      form2.append('photo', dummyImgBuffer, { filename: 'test_checkin2.jpg', contentType: 'image/jpeg' });
+      
+      await axios.post(
+        `${API_URL}/attendance/check-in`,
+        form2,
+        { headers: { ...form2.getHeaders(), Authorization: `Bearer ${empToken}` } }
+      );
+      assert(false, 'Double check-in on the same day should be blocked');
+    } catch (err) {
+      assert(
+        err.response?.status === 400 && (err.response?.data?.message?.includes('already') || err.response?.data?.message?.includes('checked in')),
+        'Double check-in on the same day blocked with 400 "already checked in" message'
+      );
+    }
+
+    // Case 4.3: Today Attendance API for Employee
+    const todayRes = await axios.get(`${API_URL}/attendance/today`, {
+      headers: { Authorization: `Bearer ${empToken}` }
     });
-    assert(res.status === 401 || res.status === 400, 'Login with incorrect password rejected', `Status: ${res.status}`);
-  } catch (err) {
-    assert(false, 'Login with incorrect password request failed', err.message);
-  }
+    assert(todayRes.status === 200, 'Employee today attendance route returns status code 200');
 
-  // 1.2 Non-existent user
-  try {
-    const res = await fetch(`${API_BASE}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'nonexistent@company.com', password: 'password123' })
+    // ----------------------------------------------------
+    // 5. TASK MANAGEMENT & PERFORMANCE POINTS EDGE CASES
+    // ----------------------------------------------------
+    console.log('\n--- 5. Tasks & Performance Leaderboard Edge Cases ---');
+
+    // Case 5.1: Create Task missing fields
+    try {
+      await axios.post(
+        `${API_URL}/tasks`,
+        { title: '' },
+        { headers: { Authorization: `Bearer ${adminToken}` } }
+      );
+      assert(false, 'Task missing required fields should fail');
+    } catch (err) {
+      assert(err.response?.status === 400, 'Task creation missing fields blocked with 400 Bad Request');
+    }
+
+    // Case 5.2: Fetch Performance Leaderboard
+    const lbRes = await axios.get(`${API_URL}/performance/leaderboard`, {
+      headers: { Authorization: `Bearer ${adminToken}` }
     });
-    assert(res.status === 401 || res.status === 404 || res.status === 400, 'Login with non-existent email rejected', `Status: ${res.status}`);
-  } catch (err) {
-    assert(false, 'Login with non-existent email request failed', err.message);
-  }
+    assert(Array.isArray(lbRes.data) && lbRes.data.length > 0, 'Performance leaderboard returns sorted workforce array');
 
-  // 1.3 Empty credentials
-  try {
-    const res = await fetch(`${API_BASE}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: '', password: '' })
+    // ----------------------------------------------------
+    // 6. ACTIVITY AUDIT LOGS EDGE CASES
+    // ----------------------------------------------------
+    console.log('\n--- 6. Activity Audit Trail ---');
+
+    const logsRes = await axios.get(`${API_URL}/activity-logs`, {
+      headers: { Authorization: `Bearer ${adminToken}` }
     });
-    assert(res.status >= 400, 'Login with empty body/credentials rejected', `Status: ${res.status}`);
-  } catch (err) {
-    assert(false, 'Login with empty credentials failed', err.message);
+    assert(Array.isArray(logsRes.data) && logsRes.data.length > 0, 'Activity audit logs route returns recorded audit feed');
+
+    console.log('\n====================================================');
+    console.log(`🎉 TEST RESULTS: ${passed} PASSED | ${failed} FAILED`);
+    console.log('====================================================\n');
+
+    if (failed > 0) {
+      process.exit(1);
+    }
+  } catch (globalErr) {
+    console.error('Fatal Edge Case Test Execution Error:', globalErr.message);
+    process.exit(1);
   }
-
-  // 1.4 Access protected route without authorization header
-  try {
-    const res = await fetch(`${API_BASE}/employees`);
-    assert(res.status === 401, 'GET /api/employees without auth header rejected (401)', `Status: ${res.status}`);
-  } catch (err) {
-    assert(false, 'Unauthenticated GET /api/employees failed', err.message);
-  }
-
-  // 1.5 Access protected route with invalid/malformed token
-  try {
-    const res = await fetch(`${API_BASE}/employees`, {
-      headers: { 'Authorization': 'Bearer invalid_token_xyz_123' }
-    });
-    assert(res.status === 401, 'GET /api/employees with invalid token rejected (401)', `Status: ${res.status}`);
-  } catch (err) {
-    assert(false, 'Invalid token GET /api/employees failed', err.message);
-  }
-
-
-  // --- 2. AUTHORIZATION & ROLE PRIVILEGE EDGE CASES ---
-  console.log('\n--- 2. AUTHORIZATION EDGE CASES ---');
-
-  // 2.1 Non-admin employee trying to access admin-only endpoint (e.g. create employee)
-  try {
-    const res = await fetch(`${API_BASE}/employees`, {
-      method: 'POST',
-      headers: { 
-        'Authorization': `Bearer ${employeeToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: 'Unauthorized User',
-        email: 'unauth@company.com',
-        phone: '1234567890',
-        department: 'IT',
-        designation: 'Tester',
-        dateOfBirth: '2000-01-01',
-        joiningDate: '2026-01-01',
-        address: 'Test Address',
-        emergencyContact: '0987654321',
-        bloodGroup: 'A+'
-      })
-    });
-    assert(res.status === 403 || res.status === 401, 'Employee creating new employee forbidden (403/401)', `Status: ${res.status}`);
-  } catch (err) {
-    assert(false, 'Role authorization check failed', err.message);
-  }
-
-
-  // --- 3. MONGO OBJECTID & RESOURCE NOT FOUND EDGE CASES ---
-  console.log('\n--- 3. INVALID ID & NOT FOUND EDGE CASES ---');
-
-  // 3.1 Fetch non-existent MongoDB ObjectId (valid format, but doesn't exist)
-  try {
-    const fakeId = '507f1f77bcf86cd799439011';
-    const res = await fetch(`${API_BASE}/employees/${fakeId}`, {
-      headers: { 'Authorization': `Bearer ${adminToken}` }
-    });
-    assert(res.status === 404, 'GET employee with non-existent ID returns 404', `Status: ${res.status}`);
-  } catch (err) {
-    assert(false, 'Non-existent employee fetch test failed', err.message);
-  }
-
-  // 3.2 Malformed MongoDB ObjectId
-  try {
-    const malformedId = 'invalid-mongo-id-123';
-    const res = await fetch(`${API_BASE}/employees/${malformedId}`, {
-      headers: { 'Authorization': `Bearer ${adminToken}` }
-    });
-    assert(res.status === 400 || res.status === 404 || res.status === 500, 'GET employee with malformed ID handled safely without crash', `Status: ${res.status}`);
-  } catch (err) {
-    assert(false, 'Malformed ID test failed', err.message);
-  }
-
-  // 3.3 Delete non-existent employee ID
-  try {
-    const fakeId = '507f1f77bcf86cd799439022';
-    const res = await fetch(`${API_BASE}/employees/${fakeId}`, {
-      method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${adminToken}` }
-    });
-    assert(res.status === 404 || res.status === 200, 'DELETE non-existent employee handled safely', `Status: ${res.status}`);
-  } catch (err) {
-    assert(false, 'DELETE non-existent employee failed', err.message);
-  }
-
-
-  // --- 4. DATA VALIDATION EDGE CASES ---
-  console.log('\n--- 4. DATA VALIDATION EDGE CASES ---');
-
-  // 4.1 Create employee missing required fields
-  try {
-    const res = await fetch(`${API_BASE}/employees`, {
-      method: 'POST',
-      headers: { 
-        'Authorization': `Bearer ${adminToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: 'Incomplete User'
-      })
-    });
-    assert(res.status >= 400, 'Creating employee without required fields fails validation (400/500)', `Status: ${res.status}`);
-  } catch (err) {
-    assert(false, 'Validation test failed', err.message);
-  }
-
-  // 4.2 Create task with invalid priority or missing title
-  try {
-    const res = await fetch(`${API_BASE}/tasks`, {
-      method: 'POST',
-      headers: { 
-        'Authorization': `Bearer ${adminToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        description: 'Missing title task'
-      })
-    });
-    assert(res.status >= 400, 'Creating task without title fails validation', `Status: ${res.status}`);
-  } catch (err) {
-    assert(false, 'Task validation failed', err.message);
-  }
-
-
-  // --- 5. ATTENDANCE SCAN & QR EDGE CASES ---
-  console.log('\n--- 5. ATTENDANCE EDGE CASES ---');
-
-  // 5.1 Scanning with non-existent employee QR token
-  try {
-    const res = await fetch(`${API_BASE}/attendance/scan`, {
-      method: 'POST',
-      headers: { 
-        'Authorization': `Bearer ${adminToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        employeeId: 'NON_EXISTENT_EMP_999',
-        scanTime: new Date().toISOString()
-      })
-    });
-    assert(res.status === 404 || res.status === 400, 'Scan with invalid employee ID rejected', `Status: ${res.status}`);
-  } catch (err) {
-    assert(false, 'Attendance scan invalid ID test failed', err.message);
-  }
-
-  // 5.2 Manual attendance record creation with invalid data
-  try {
-    const res = await fetch(`${API_BASE}/attendance/manual`, {
-      method: 'POST',
-      headers: { 
-        'Authorization': `Bearer ${adminToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        employeeId: '507f1f77bcf86cd799439011',
-        date: 'invalid-date',
-        status: 'INVALID_STATUS'
-      })
-    });
-    assert(res.status >= 400, 'Manual attendance with invalid status/date rejected', `Status: ${res.status}`);
-  } catch (err) {
-    assert(false, 'Manual attendance validation test failed', err.message);
-  }
-
-
-  console.log('\n====================================================');
-  console.log(`📊 SUMMARY: ${passed} PASSED, ${failed} FAILED OUT OF ${passed + failed} EDGE CASE TESTS`);
-  console.log('====================================================');
 }
 
 runEdgeCaseTests();

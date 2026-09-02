@@ -37,6 +37,10 @@ export const createTask = async (req, res) => {
   try {
     const { title, description, assignedTo, points, priority, dueDate } = req.body;
 
+    if (!title || !title.trim() || !assignedTo) {
+      return res.status(400).json({ message: 'Task title and assigned employee are required.' });
+    }
+
     const task = await Task.create({
       title,
       description,
