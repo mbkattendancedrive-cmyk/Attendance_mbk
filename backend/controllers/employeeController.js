@@ -101,7 +101,7 @@ export const createEmployee = async (req, res) => {
     }
     
     // Default password for new employees (can be changed later)
-    const password = 'Password@123';
+    const password = req.body.password || 'Password@123';
 
     const empData = {
       employeeId,
