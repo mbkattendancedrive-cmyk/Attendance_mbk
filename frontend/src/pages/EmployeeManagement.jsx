@@ -79,6 +79,7 @@ const EmployeeManagement = () => {
   });
 
   const [formError, setFormError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     fetchEmployees();
@@ -119,6 +120,8 @@ const EmployeeManagement = () => {
       await API.post('/employees', formData);
       setShowAddModal(false);
       resetForm();
+      setSuccessMessage('Employee successfully added!');
+      setTimeout(() => setSuccessMessage(''), 3000);
       await fetchEmployees();
     } catch (err) {
       setFormError(err.response?.data?.message || 'Failed to add employee');
@@ -132,6 +135,8 @@ const EmployeeManagement = () => {
       await API.put(`/employees/${editEmployee._id}`, formData);
       setEditEmployee(null);
       resetForm();
+      setSuccessMessage('Employee successfully updated!');
+      setTimeout(() => setSuccessMessage(''), 3000);
       fetchEmployees();
     } catch (err) {
       setFormError(err.response?.data?.message || 'Failed to update employee');
