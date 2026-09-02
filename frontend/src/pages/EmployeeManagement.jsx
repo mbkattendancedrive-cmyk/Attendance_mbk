@@ -30,7 +30,8 @@ import {
   Key,
   EyeOff,
   ShieldCheck,
-  Copy
+  Copy,
+  Building2
 } from 'lucide-react';
 
 const EmployeeManagement = () => {
