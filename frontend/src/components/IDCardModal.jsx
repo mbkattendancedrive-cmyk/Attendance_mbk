@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import QRCode from 'qrcode';
 import { X, Printer, Download, Layers, RefreshCw, ExternalLink, Sparkles, Edit3, QrCode } from 'lucide-react';
 import API from '../services/api';
@@ -331,8 +332,8 @@ const IDCardModal = ({ employee, onClose }) => {
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-md flex items-start md:items-center justify-center p-3 sm:p-6 overflow-y-auto">
+  return createPortal(
+    <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
       <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 max-w-4xl w-full max-h-[90vh] flex flex-col relative space-y-5 shadow-2xl my-auto animate-fade-in-up">
         
         {/* Header Bar */}
@@ -513,7 +514,8 @@ const IDCardModal = ({ employee, onClose }) => {
         </div>
 
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

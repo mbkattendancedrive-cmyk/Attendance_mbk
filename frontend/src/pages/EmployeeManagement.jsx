@@ -469,14 +469,6 @@ const EmployeeManagement = () => {
                           </button>
 
                           <button
-                            onClick={() => setSelectedIDCardEmp(emp)}
-                            title="ID Card"
-                            className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
-                          >
-                            <QrCode className="w-4 h-4" />
-                          </button>
-
-                          <button
                             onClick={() => openEditModal(emp)}
                             title="Edit Profile"
                             className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
@@ -560,12 +552,6 @@ const EmployeeManagement = () => {
                         <Eye className="w-4 h-4" />
                       </button>
                       <button
-                        onClick={() => setSelectedIDCardEmp(emp)}
-                        className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg"
-                      >
-                        <QrCode className="w-4 h-4" />
-                      </button>
-                      <button
                         onClick={() => openEditModal(emp)}
                         className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg"
                       >
@@ -600,148 +586,150 @@ const EmployeeManagement = () => {
       )}
 
       {/* Profile Detail Modal */}
-      {profileData && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-6 max-w-2xl w-full relative space-y-6 shadow-xl animate-fade-in">
-            <button
-              onClick={() => setProfileData(null)}
-              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-900 rounded-lg hover:bg-slate-100"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex flex-col sm:flex-row items-center gap-5 pb-5 border-b border-slate-100">
-              {profileData.employee.profilePhoto ? (
-                <img
-                  src={profileData.employee.profilePhoto}
-                  alt={profileData.employee.name}
-                  className="w-16 h-16 rounded-full object-cover border border-slate-200 shrink-0"
-                />
-              ) : (
-                <div className="w-16 h-16 rounded-full bg-slate-900 text-white font-bold flex items-center justify-center text-xl shrink-0">
-                  {profileData.employee.name[0]}
-                </div>
-              )}
-              <div className="text-center sm:text-left">
-                <div className="flex items-center gap-2 justify-center sm:justify-start">
-                  <h2 className="text-xl font-bold text-slate-900">{profileData.employee.name}</h2>
-                  <span className="font-mono text-xs text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200/60 font-semibold">
-                    {profileData.employee.employeeId}
-                  </span>
-                </div>
-                <p className="text-sm font-medium text-slate-700 mt-0.5">{profileData.employee.designation}</p>
-                <p className="text-xs text-slate-500">{profileData.employee.department} Department</p>
-              </div>
-              
-              <div className="sm:ml-auto">
-                <span className={profileData.employee.status === 'Active' ? 'badge-success' : 'badge-danger'}>
-                  {profileData.employee.status}
-                </span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
-              <div className="p-3 bg-slate-50 border border-slate-200/60 rounded-xl">
-                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Assigned Tasks</span>
-                <span className="text-lg font-bold text-slate-900 mt-0.5 block tabular-nums">{profileData.stats.totalTasks}</span>
-              </div>
-              <div className="p-3 bg-emerald-50/60 border border-emerald-200/50 rounded-xl">
-                <span className="text-xs font-semibold text-emerald-700 uppercase tracking-wider block">Completed</span>
-                <span className="text-lg font-bold text-emerald-800 mt-0.5 block tabular-nums">{profileData.stats.completedTasks}</span>
-              </div>
-              <div className="p-3 bg-sky-50/60 border border-sky-200/50 rounded-xl">
-                <span className="text-xs font-semibold text-sky-700 uppercase tracking-wider block">Pending</span>
-                <span className="text-lg font-bold text-sky-800 mt-0.5 block tabular-nums">{profileData.stats.pendingTasks}</span>
-              </div>
-              <div className="p-3 bg-amber-50/60 border border-amber-200/50 rounded-xl">
-                <span className="text-xs font-semibold text-amber-700 uppercase tracking-wider block">Completion</span>
-                <span className="text-lg font-bold text-amber-800 mt-0.5 block tabular-nums">{profileData.stats.completionRate}%</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm font-normal border-t border-slate-100 pt-4">
-              <div className="flex justify-between py-1 border-b border-slate-100">
-                <span className="text-slate-500 flex items-center gap-2"><Mail className="w-4 h-4 text-slate-400" /> Email</span>
-                <span className="text-slate-900 font-semibold">{profileData.employee.email}</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-slate-100">
-                <span className="text-slate-500 flex items-center gap-2"><Phone className="w-4 h-4 text-slate-400" /> Phone</span>
-                <span className="text-slate-900 font-semibold">{profileData.employee.phone}</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-slate-100">
-                <span className="text-slate-500 flex items-center gap-2"><Calendar className="w-4 h-4 text-slate-400" /> Joined</span>
-                <span className="text-slate-900 font-semibold">{new Date(profileData.employee.joiningDate).toLocaleDateString()}</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-slate-100">
-                <span className="text-slate-500 flex items-center gap-2"><Award className="w-4 h-4 text-amber-500" /> Total Points</span>
-                <span className="text-amber-700 font-bold tabular-nums">{profileData.employee.totalPoints || 0} Pts</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-slate-100">
-                <span className="text-slate-500 flex items-center gap-2"><Heart className="w-4 h-4 text-rose-500" /> Blood Group</span>
-                <span className="text-rose-700 font-bold">{profileData.employee.bloodGroup || 'O+'}</span>
-              </div>
-            </div>
-
-            <div className="space-y-3 pt-3 border-t border-slate-100">
-              <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <CheckSquare className="w-4 h-4 text-slate-500" />
-                Task History
-              </h3>
-              
-              {profileData.tasks.length === 0 ? (
-                <p className="text-xs text-slate-400 text-center py-4 bg-slate-50 rounded-xl">No tasks assigned yet.</p>
-              ) : (
-                <div className="max-h-[200px] overflow-y-auto space-y-2 pr-1">
-                  {profileData.tasks.map((task) => (
-                    <div key={task._id} className="p-3 bg-slate-50 border border-slate-200/60 rounded-xl flex items-center justify-between gap-3 text-xs">
-                      <div className="space-y-1">
-                        <h4 className="font-bold text-slate-900">{task.title}</h4>
-                        <div className="flex items-center gap-2 text-xs text-slate-500">
-                          <span className={getPriorityBadgeClass(task.priority)}>{task.priority}</span>
-                          <span>•</span>
-                          <span className="font-mono text-amber-700 font-bold">+{task.points} Pts</span>
-                          <span>•</span>
-                          <span>Due: {new Date(task.dueDate).toLocaleDateString()}</span>
-                        </div>
-                      </div>
-                      
-                      <span className={
-                        task.status === 'Completed' ? 'badge-success' :
-                        task.status === 'In Progress' ? 'badge-info' :
-                        'badge-warning'
-                      }>
-                        {task.status}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="flex justify-end gap-3 pt-3 border-t border-slate-100">
-              <button
-                onClick={() => setSelectedIDCardEmp(profileData.employee)}
-                className="btn-secondary text-xs"
-              >
-                <QrCode className="w-4 h-4" />
-                ID Card
-              </button>
-              <button
-                onClick={() => openEditModal(profileData.employee)}
-                className="btn-secondary text-xs"
-              >
-                <Edit3 className="w-4 h-4" />
-                Edit
-              </button>
+      {profileData && createPortal(
+        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white border border-slate-200/90 rounded-3xl max-w-2xl w-full relative space-y-6 shadow-2xl overflow-hidden animate-fade-in my-auto">
+            
+            {/* Header Banner */}
+            <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-6 text-white relative">
               <button
                 onClick={() => setProfileData(null)}
-                className="btn-primary text-xs"
+                className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xs transition-colors"
               >
-                Close
+                <X className="w-5 h-5" />
               </button>
+
+              <div className="flex flex-col sm:flex-row items-center gap-5">
+                {profileData.employee.profilePhoto ? (
+                  <img
+                    src={profileData.employee.profilePhoto}
+                    alt={profileData.employee.name}
+                    className="w-20 h-20 rounded-2xl object-cover border-2 border-white/20 shadow-lg shrink-0"
+                  />
+                ) : (
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-slate-700 text-white font-bold flex items-center justify-center text-2xl border-2 border-white/20 shadow-lg shrink-0">
+                    {profileData.employee.name[0]}
+                  </div>
+                )}
+                <div className="text-center sm:text-left space-y-1">
+                  <div className="flex items-center gap-2 justify-center sm:justify-start flex-wrap">
+                    <h2 className="text-xl font-extrabold tracking-tight text-white">{profileData.employee.name}</h2>
+                    <span className="font-mono text-xs text-amber-300 bg-white/10 backdrop-blur-xs px-2.5 py-0.5 rounded-full border border-amber-400/30 font-semibold">
+                      {profileData.employee.employeeId}
+                    </span>
+                    <span className={profileData.employee.status === 'Active' ? 'px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/30'}>
+                      {profileData.employee.status}
+                    </span>
+                  </div>
+                  <p className="text-sm font-medium text-slate-300">{profileData.employee.designation}</p>
+                  <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">{profileData.employee.department} Department</p>
+                </div>
+              </div>
             </div>
+
+            <div className="p-6 pt-0 space-y-6">
+              {/* Stats Bar */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+                <div className="p-3 bg-slate-50 border border-slate-200/80 rounded-2xl">
+                  <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Total Tasks</span>
+                  <span className="text-xl font-extrabold text-slate-900 mt-1 block tabular-nums">{profileData.stats.totalTasks}</span>
+                </div>
+                <div className="p-3 bg-emerald-50/70 border border-emerald-200/60 rounded-2xl">
+                  <span className="text-[11px] font-semibold text-emerald-700 uppercase tracking-wider block">Completed</span>
+                  <span className="text-xl font-extrabold text-emerald-800 mt-1 block tabular-nums">{profileData.stats.completedTasks}</span>
+                </div>
+                <div className="p-3 bg-sky-50/70 border border-sky-200/60 rounded-2xl">
+                  <span className="text-[11px] font-semibold text-sky-700 uppercase tracking-wider block">Pending</span>
+                  <span className="text-xl font-extrabold text-sky-800 mt-1 block tabular-nums">{profileData.stats.pendingTasks}</span>
+                </div>
+                <div className="p-3 bg-amber-50/70 border border-amber-200/60 rounded-2xl">
+                  <span className="text-[11px] font-semibold text-amber-700 uppercase tracking-wider block">Completion</span>
+                  <span className="text-xl font-extrabold text-amber-800 mt-1 block tabular-nums">{profileData.stats.completionRate}%</span>
+                </div>
+              </div>
+
+              {/* Employee Information */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80">
+                <div className="flex justify-between py-1.5 border-b border-slate-200/60">
+                  <span className="text-slate-500 flex items-center gap-2 font-medium"><Mail className="w-3.5 h-3.5 text-slate-400" /> Email</span>
+                  <span className="text-slate-900 font-semibold truncate max-w-[180px]">{profileData.employee.email}</span>
+                </div>
+                <div className="flex justify-between py-1.5 border-b border-slate-200/60">
+                  <span className="text-slate-500 flex items-center gap-2 font-medium"><Phone className="w-3.5 h-3.5 text-slate-400" /> Phone</span>
+                  <span className="text-slate-900 font-semibold">{profileData.employee.phone}</span>
+                </div>
+                <div className="flex justify-between py-1.5 border-b border-slate-200/60">
+                  <span className="text-slate-500 flex items-center gap-2 font-medium"><Calendar className="w-3.5 h-3.5 text-slate-400" /> Joined</span>
+                  <span className="text-slate-900 font-semibold">{new Date(profileData.employee.joiningDate).toLocaleDateString()}</span>
+                </div>
+                <div className="flex justify-between py-1.5 border-b border-slate-200/60">
+                  <span className="text-slate-500 flex items-center gap-2 font-medium"><Award className="w-3.5 h-3.5 text-amber-500" /> Total Points</span>
+                  <span className="text-amber-700 font-extrabold tabular-nums">{profileData.employee.totalPoints || 0} Pts</span>
+                </div>
+                <div className="flex justify-between py-1.5">
+                  <span className="text-slate-500 flex items-center gap-2 font-medium"><Heart className="w-3.5 h-3.5 text-rose-500" /> Blood Group</span>
+                  <span className="text-rose-700 font-extrabold">{profileData.employee.bloodGroup || 'O+'}</span>
+                </div>
+              </div>
+
+              {/* Task History */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                  <CheckSquare className="w-4 h-4 text-slate-500" />
+                  Task History
+                </h3>
+                
+                {profileData.tasks.length === 0 ? (
+                  <p className="text-xs text-slate-400 text-center py-4 bg-slate-50 rounded-xl border border-slate-200/60">No tasks assigned yet.</p>
+                ) : (
+                  <div className="max-h-[180px] overflow-y-auto space-y-2 pr-1">
+                    {profileData.tasks.map((task) => (
+                      <div key={task._id} className="p-3 bg-white border border-slate-200 rounded-xl flex items-center justify-between gap-3 text-xs shadow-2xs">
+                        <div className="space-y-1">
+                          <h4 className="font-bold text-slate-900">{task.title}</h4>
+                          <div className="flex items-center gap-2 text-[11px] text-slate-500">
+                            <span className={getPriorityBadgeClass(task.priority)}>{task.priority}</span>
+                            <span>•</span>
+                            <span className="font-mono text-amber-700 font-bold">+{task.points} Pts</span>
+                            <span>•</span>
+                            <span>Due: {new Date(task.dueDate).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                        
+                        <span className={
+                          task.status === 'Completed' ? 'badge-success text-[11px]' :
+                          task.status === 'In Progress' ? 'badge-info text-[11px]' :
+                          'badge-warning text-[11px]'
+                        }>
+                          {task.status}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Footer Controls */}
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                <button
+                  onClick={() => openEditModal(profileData.employee)}
+                  className="btn-secondary text-xs"
+                >
+                  <Edit3 className="w-3.5 h-3.5" />
+                  Edit Profile
+                </button>
+                <button
+                  onClick={() => setProfileData(null)}
+                  className="btn-primary text-xs px-5"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* ID Card Modal */}
@@ -753,16 +741,21 @@ const EmployeeManagement = () => {
       )}
 
       {/* Status Toggle Modal */}
-      {confirmStatusEmp && (
-        <div className="fixed inset-0 z-50 bg-slate-900/30 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-xl">
-            <div className="flex items-center gap-2 text-amber-600">
-              <UserCheck className="w-6 h-6 shrink-0" />
-              <h3 className="text-base font-bold text-slate-900">Confirm Status Change</h3>
+      {confirmStatusEmp && createPortal(
+        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-2xl my-auto animate-fade-in">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-amber-100 text-amber-700 rounded-2xl shrink-0">
+                <UserCheck className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900">Confirm Status Change</h3>
+                <p className="text-xs text-slate-500">Employee Account Control</p>
+              </div>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Change <span className="font-semibold text-slate-900">{confirmStatusEmp.name}</span>'s status to{' '}
-              <span className="font-semibold text-slate-900">{confirmStatusEmp.status === 'Active' ? 'Inactive' : 'Active'}</span>?
+              Are you sure you want to change <span className="font-bold text-slate-900">{confirmStatusEmp.name}</span>'s status to{' '}
+              <span className="font-bold text-slate-900">{confirmStatusEmp.status === 'Active' ? 'Inactive' : 'Active'}</span>?
             </p>
             <div className="flex justify-end gap-3 pt-2">
               <button
@@ -779,7 +772,8 @@ const EmployeeManagement = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Add / Edit Employee Modal */}
