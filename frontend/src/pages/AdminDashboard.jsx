@@ -96,18 +96,18 @@ const AdminDashboard = () => {
         {/* Card 1: Active Workforce */}
         <div className="card-saas p-3.5 sm:p-5 space-y-2 sm:space-y-3 hover:border-slate-300 transition-all min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider block truncate">Active Workforce</span>
+            <span className="text-xs sm:text-xs font-bold text-slate-500 uppercase tracking-wider block truncate">Active Workforce</span>
             <div className="p-1.5 sm:p-2 bg-slate-100 text-slate-700 rounded-lg shrink-0">
-              <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <Users className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <div className="text-xl sm:text-3xl font-bold text-slate-900 tabular-nums truncate">
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 tabular-nums truncate">
               {stats?.activeEmployees || 0}
               <span className="text-xs sm:text-sm font-normal text-slate-400 ml-1">/ {stats?.totalEmployees || 0}</span>
             </div>
-            <div className="flex items-center gap-1 mt-1 text-[10px] sm:text-xs text-emerald-600 font-semibold truncate">
-              <TrendingUp className="w-3 h-3 shrink-0" />
+            <div className="flex items-center gap-1 mt-1 text-xs sm:text-xs text-emerald-700 font-bold truncate">
+              <TrendingUp className="w-3.5 h-3.5 shrink-0" />
               <span>Active ratio {stats?.totalEmployees ? Math.round(((stats.activeEmployees || 0) / stats.totalEmployees) * 100) : 0}%</span>
             </div>
           </div>
@@ -116,49 +116,49 @@ const AdminDashboard = () => {
         {/* Card 2: Tasks Completed */}
         <div className="card-saas p-3.5 sm:p-5 space-y-2 sm:space-y-3 hover:border-slate-300 transition-all min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider block truncate">Tasks Done</span>
+            <span className="text-xs sm:text-xs font-bold text-slate-500 uppercase tracking-wider block truncate">Tasks Done</span>
             <div className="p-1.5 sm:p-2 bg-emerald-50 text-emerald-700 rounded-lg shrink-0 border border-emerald-200/50">
-              <CheckSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <CheckSquare className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <div className="text-xl sm:text-3xl font-bold text-slate-900 tabular-nums truncate">
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 tabular-nums truncate">
               {stats?.completedTasks || 0}
               <span className="text-xs sm:text-sm font-normal text-slate-400 ml-1">/ {stats?.totalTasks || 0}</span>
             </div>
-            <p className="text-[10px] sm:text-xs text-slate-500 mt-1 truncate">Completed tasks</p>
+            <p className="text-xs sm:text-xs text-slate-500 font-medium mt-1 truncate">Completed tasks</p>
           </div>
         </div>
 
         {/* Card 3: In Progress Operations */}
         <div className="card-saas p-3.5 sm:p-5 space-y-2 sm:space-y-3 hover:border-slate-300 transition-all min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider block truncate">In Progress</span>
+            <span className="text-xs sm:text-xs font-bold text-slate-500 uppercase tracking-wider block truncate">In Progress</span>
             <div className="p-1.5 sm:p-2 bg-sky-50 text-sky-700 rounded-lg shrink-0 border border-sky-200/50">
-              <ClipboardList className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <ClipboardList className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <div className="text-xl sm:text-3xl font-bold text-slate-900 tabular-nums truncate">
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 tabular-nums truncate">
               {stats?.inProgressTasks || 0}
             </div>
-            <p className="text-[10px] sm:text-xs text-amber-600 font-semibold mt-1 truncate">{stats?.pendingTasks || 0} pending review</p>
+            <p className="text-xs sm:text-xs text-sky-700 font-bold mt-1 truncate">Active assignments</p>
           </div>
         </div>
 
-        {/* Card 4: Total System Score */}
+        {/* Card 4: Total Workforce Score */}
         <div className="card-saas p-3.5 sm:p-5 space-y-2 sm:space-y-3 hover:border-slate-300 transition-all min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider block truncate">Total Score</span>
+            <span className="text-xs sm:text-xs font-bold text-slate-500 uppercase tracking-wider block truncate">Total Score</span>
             <div className="p-1.5 sm:p-2 bg-amber-50 text-amber-700 rounded-lg shrink-0 border border-amber-200/50">
-              <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <Award className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <div className="text-xl sm:text-3xl font-bold text-slate-900 tabular-nums truncate">
-              {stats?.totalPoints || 0} <span className="text-xs sm:text-sm font-normal text-slate-400">pts</span>
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 tabular-nums truncate">
+              {stats?.totalPointsAwarded || 0} <span className="text-xs sm:text-sm font-normal text-slate-400">pts</span>
             </div>
-            <p className="text-[10px] sm:text-xs text-slate-500 mt-1 truncate">Accumulated score</p>
+            <p className="text-xs sm:text-xs text-slate-500 font-medium mt-1 truncate">Total points awarded</p>
           </div>
         </div>
       </div>

@@ -367,30 +367,30 @@ const EmployeeAttendance = () => {
             <div className="grid grid-cols-3 gap-2 sm:gap-4">
               
               {/* Check In Time */}
-              <div className="p-3 sm:p-5 bg-white border border-slate-200/80 rounded-xl sm:rounded-2xl space-y-1 shadow-2xs min-w-0">
-                <span className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider block truncate">Check In Time</span>
-                <p className="text-xs sm:text-xl font-extrabold text-slate-900 tabular-nums truncate">
+              <div className="p-3 sm:p-5 bg-white border border-slate-300/90 rounded-xl sm:rounded-2xl space-y-1 shadow-2xs min-w-0">
+                <span className="text-xs sm:text-xs font-bold text-slate-500 uppercase tracking-wider block truncate">Check In Time</span>
+                <p className="text-sm sm:text-xl font-black text-slate-900 tabular-nums truncate">
                   {formatTime(todayData.checkIn)}
                 </p>
               </div>
 
               {/* Check Out Time */}
-              <div className="p-3 sm:p-5 bg-white border border-slate-200/80 rounded-xl sm:rounded-2xl space-y-1 shadow-2xs min-w-0">
-                <span className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider block truncate">Check Out Time</span>
-                <p className="text-xs sm:text-xl font-bold text-slate-500 tabular-nums truncate">
-                  {todayData.checkOut ? formatTime(todayData.checkOut) : 'Pending'}
+              <div className="p-3 sm:p-5 bg-white border border-slate-300/90 rounded-xl sm:rounded-2xl space-y-1 shadow-2xs min-w-0">
+                <span className="text-xs sm:text-xs font-bold text-slate-500 uppercase tracking-wider block truncate">Check Out Time</span>
+                <p className="text-sm sm:text-xl font-bold text-slate-700 tabular-nums truncate">
+                  {todayData.checkOut ? formatTime(todayData.checkOut) : '-- : --'}
                 </p>
               </div>
 
               {/* Total Working Hours */}
-              <div className="p-3 sm:p-5 bg-white border border-slate-200/80 rounded-xl sm:rounded-2xl space-y-1 shadow-2xs min-w-0">
-                <span className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider block truncate">Working Hours</span>
+              <div className="p-3 sm:p-5 bg-white border border-slate-300/90 rounded-xl sm:rounded-2xl space-y-1 shadow-2xs min-w-0">
+                <span className="text-xs sm:text-xs font-bold text-slate-500 uppercase tracking-wider block truncate">Working Hours</span>
                 {todayData.workingHours ? (
-                  <p className="text-xs sm:text-xl font-extrabold text-emerald-600 tabular-nums truncate">
+                  <p className="text-sm sm:text-xl font-black text-slate-900 tabular-nums truncate">
                     {todayData.workingHours}
                   </p>
                 ) : (
-                  <div className="inline-flex items-center gap-1 text-[10px] sm:text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg border border-emerald-200/60 mt-0.5">
+                  <div className="inline-flex items-center gap-1 text-xs sm:text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg border border-emerald-200/60 mt-0.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
                     <span className="truncate">In Progress</span>
                   </div>

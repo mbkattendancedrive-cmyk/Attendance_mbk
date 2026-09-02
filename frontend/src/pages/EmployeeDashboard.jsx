@@ -77,56 +77,56 @@ const EmployeeDashboard = () => {
         {/* Assigned */}
         <div className="card-saas p-3.5 sm:p-5 space-y-2 sm:space-y-3 hover:border-slate-300 transition-all min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider block truncate">Assigned</span>
+            <span className="text-xs sm:text-xs font-bold text-slate-500 uppercase tracking-wider block truncate">Assigned</span>
             <div className="p-1.5 sm:p-2 bg-slate-100 text-slate-700 rounded-lg shrink-0">
-              <ClipboardList className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <ClipboardList className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <div className="text-xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">{assignedCount}</div>
-            <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5 sm:mt-1 truncate">Total objectives</p>
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 tabular-nums">{assignedCount}</div>
+            <p className="text-xs sm:text-xs text-slate-500 mt-0.5 sm:mt-1 truncate">Total objectives</p>
           </div>
         </div>
 
         {/* Pending */}
         <div className="card-saas p-3.5 sm:p-5 space-y-2 sm:space-y-3 hover:border-slate-300 transition-all min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider block truncate">Pending</span>
+            <span className="text-xs sm:text-xs font-bold text-slate-500 uppercase tracking-wider block truncate">Pending</span>
             <div className="p-1.5 sm:p-2 bg-amber-50 text-amber-700 rounded-lg shrink-0 border border-amber-200/50">
-              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <Clock className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <div className="text-xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">{pendingCount}</div>
-            <p className="text-[10px] sm:text-xs text-amber-600 font-semibold mt-0.5 sm:mt-1 truncate">Awaiting action</p>
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 tabular-nums">{pendingCount}</div>
+            <p className="text-xs sm:text-xs text-amber-700 font-bold mt-0.5 sm:mt-1 truncate">Awaiting action</p>
           </div>
         </div>
 
         {/* Completed */}
         <div className="card-saas p-3.5 sm:p-5 space-y-2 sm:space-y-3 hover:border-slate-300 transition-all min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider block truncate">Completed</span>
+            <span className="text-xs sm:text-xs font-bold text-slate-500 uppercase tracking-wider block truncate">Completed</span>
             <div className="p-1.5 sm:p-2 bg-emerald-50 text-emerald-700 rounded-lg shrink-0 border border-emerald-200/50">
-              <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <CheckCircle className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <div className="text-xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">{completedCount}</div>
-            <p className="text-[10px] sm:text-xs text-emerald-600 font-semibold mt-0.5 sm:mt-1 truncate">Tasks delivered</p>
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 tabular-nums">{completedCount}</div>
+            <p className="text-xs sm:text-xs text-emerald-700 font-bold mt-0.5 sm:mt-1 truncate">Tasks delivered</p>
           </div>
         </div>
 
         {/* My Points */}
         <div className="card-saas p-3.5 sm:p-5 space-y-2 sm:space-y-3 hover:border-slate-300 transition-all min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider block truncate">My Points</span>
+            <span className="text-xs sm:text-xs font-bold text-slate-500 uppercase tracking-wider block truncate">My Points</span>
             <div className="p-1.5 sm:p-2 bg-amber-50 text-amber-700 rounded-lg shrink-0 border border-amber-200/50">
-              <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <Award className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <div className="text-xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">{user?.totalPoints || 0} <span className="text-xs sm:text-sm font-normal text-slate-400">pts</span></div>
-            <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5 sm:mt-1 truncate">Earned score</p>
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 tabular-nums">{user?.totalPoints || 0} <span className="text-xs sm:text-sm font-normal text-slate-400">pts</span></div>
+            <p className="text-xs sm:text-xs text-slate-500 mt-0.5 sm:mt-1 truncate">Earned score</p>
           </div>
         </div>
       </div>
