@@ -17,7 +17,9 @@ import {
   FileImage,
   Building2,
   Check,
-  Camera
+  Camera,
+  MapPin,
+  Map
 } from 'lucide-react';
 
 const EmployeeAttendance = () => {
@@ -33,6 +35,11 @@ const EmployeeAttendance = () => {
   // File upload state
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+
+  // Location state
+  const [location, setLocation] = useState(null);
+  const [locationLoading, setLocationLoading] = useState(false);
+  const [locationError, setLocationError] = useState('');
 
   // Photo viewer modal state
   const [viewPhotoUrl, setViewPhotoUrl] = useState(null);
@@ -58,6 +65,31 @@ const EmployeeAttendance = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGetLocation = () => {
+    setLocationLoading(true);
+    setLocationError('');
+    if (!navigator.geolocation) {
+      setLocationError('Geolocation is not supported by your browser.');
+      setLocationLoading(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        });
+        setLocationLoading(false);
+      },
+      (error) => {
+        setLocationError('Unable to retrieve location. Please grant permission in your browser settings.');
+        setLocationLoading(false);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
   };
 
   const handleFileChange = (e) => {
@@ -93,7 +125,7 @@ const EmployeeAttendance = () => {
   const handleCheckInSubmit = async (e) => {
     e.preventDefault();
     if (!selectedFile) {
-      setError('Please select your Jio Tag photo to check in.');
+      setError('Please select your Geo Tag photo to check in.');
       return;
     }
 
@@ -104,6 +136,9 @@ const EmployeeAttendance = () => {
 
       const formData = new FormData();
       formData.append('photo', selectedFile);
+      if (location) {
+        formData.append('location', JSON.stringify(location));
+      }
 
       const { data } = await API.post('/attendance/check-in', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -126,8 +161,9 @@ const EmployeeAttendance = () => {
       setSubmitting(true);
       setError(null);
       setSuccessMsg(null);
-
-      const { data } = await API.post('/attendance/check-out');
+      const { data } = await API.post('/attendance/check-out', {
+        location: location ? JSON.stringify(location) : null
+      });
       setSuccessMsg('Checked out successfully!');
       setTodayData(data.attendance);
       fetchAttendanceData();
@@ -277,14 +313,46 @@ const EmployeeAttendance = () => {
               className="hidden"
             />
 
-            {!previewUrl ? (
+            {!location ? (
               <div className="border-2 border-dashed border-slate-300 hover:border-slate-400 rounded-2xl p-6 sm:p-8 text-center bg-slate-50/50 hover:bg-slate-50 transition-colors space-y-4">
-                <div className="w-16 h-16 bg-white rounded-2xl border border-slate-300 flex items-center justify-center mx-auto text-slate-700 shadow-sm">
+                <div className="w-16 h-16 bg-white rounded-2xl border border-slate-300 flex items-center justify-center mx-auto text-sky-600 shadow-sm">
+                  <MapPin className="w-8 h-8" />
+                </div>
+                <div>
+                  <h4 className="text-base font-extrabold text-slate-900">Location Required</h4>
+                  <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto font-medium">
+                    Please grant location access to continue with attendance check-in.
+                  </p>
+                </div>
+                {locationError && (
+                  <div className="text-xs text-rose-600 font-bold bg-rose-50 p-2 rounded-lg">
+                    {locationError}
+                  </div>
+                )}
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={handleGetLocation}
+                    disabled={locationLoading}
+                    className="btn-primary py-3.5 px-6 text-base sm:text-sm w-full sm:w-auto font-bold shadow-sm active:scale-[0.98] inline-flex items-center justify-center gap-2"
+                  >
+                    {locationLoading ? (
+                      <RefreshCw className="w-5 h-5 text-white animate-spin" />
+                    ) : (
+                      <MapPin className="w-5 h-5 text-white" />
+                    )}
+                    {locationLoading ? 'Acquiring Location...' : 'Get My Location'}
+                  </button>
+                </div>
+              </div>
+            ) : !previewUrl ? (
+              <div className="border-2 border-dashed border-emerald-300 bg-emerald-50/50 rounded-2xl p-6 sm:p-8 text-center transition-colors space-y-4">
+                <div className="w-16 h-16 bg-white rounded-2xl border border-emerald-300 flex items-center justify-center mx-auto text-emerald-600 shadow-sm">
                   <Camera className="w-8 h-8" />
                 </div>
 
                 <div>
-                  <h4 className="text-base font-extrabold text-slate-900">Take or Upload Geo Tag Attendance Photo</h4>
+                  <h4 className="text-base font-extrabold text-slate-900">Location Acquired &bull; Take Photo</h4>
                   <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto font-medium">
                     Tap below to open your camera app directly to take a live photo or select a saved photo file.
                   </p>
@@ -480,6 +548,7 @@ const EmployeeAttendance = () => {
                     <th className="p-4">Check In</th>
                     <th className="p-4">Check Out</th>
                     <th className="p-4">Hours</th>
+                    <th className="p-4">Location</th>
                     <th className="p-4 pr-5 text-right">Photo Audit</th>
                   </tr>
                 </thead>
@@ -495,6 +564,21 @@ const EmployeeAttendance = () => {
                       <td className="p-4 font-mono text-xs font-semibold text-slate-900">{formatTime(record.checkIn)}</td>
                       <td className="p-4 font-mono text-xs text-slate-500">{formatTime(record.checkOut)}</td>
                       <td className="p-4 font-mono text-emerald-700 font-bold text-xs">{record.workingHours || '-'}</td>
+                      <td className="p-4">
+                        {record.location?.lat ? (
+                          <a
+                            href={`https://www.google.com/maps?q=${record.location.lat},${record.location.lng}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 bg-sky-50 text-sky-700 px-2.5 py-1 rounded-lg border border-sky-200/60 text-[11px] font-bold hover:bg-sky-100 transition-colors"
+                          >
+                            <MapPin className="w-3.5 h-3.5" />
+                            Map
+                          </a>
+                        ) : (
+                          <span className="text-slate-400 text-xs">-</span>
+                        )}
+                      </td>
                       <td className="p-4 pr-5 text-right">
                         <button
                           onClick={() => openPhotoModal(record._id)}
@@ -536,14 +620,27 @@ const EmployeeAttendance = () => {
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => openPhotoModal(record._id)}
-                    className="btn-secondary text-xs w-full py-2 flex items-center justify-center gap-1.5"
-                  >
-                    <Eye className="w-3.5 h-3.5 text-slate-600" />
-                    View Photo Evidence
-                  </button>
-                </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <button
+                        onClick={() => openPhotoModal(record._id)}
+                        className="btn-secondary text-xs w-full py-2 flex items-center justify-center gap-1.5"
+                      >
+                        <Eye className="w-3.5 h-3.5 text-slate-600" />
+                        View Photo Evidence
+                      </button>
+                      {record.location?.lat && (
+                        <a
+                          href={`https://www.google.com/maps?q=${record.location.lat},${record.location.lng}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-secondary text-xs w-full py-2 flex items-center justify-center gap-1.5 text-sky-700 bg-sky-50 border-sky-200/60 hover:bg-sky-100"
+                        >
+                          <MapPin className="w-3.5 h-3.5" />
+                          View GPS Location
+                        </a>
+                      )}
+                    </div>
+                  </div>
               ))}
             </div>
           </div>

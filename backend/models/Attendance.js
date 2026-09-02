@@ -41,6 +41,14 @@ const attendanceSchema = new mongoose.Schema({
     type: String,
     enum: ['Present', 'Checked Out', 'Absent'],
     default: 'Present'
+  },
+  location: {
+    lat: { type: Number },
+    lng: { type: Number }
+  },
+  checkOutLocation: {
+    lat: { type: Number },
+    lng: { type: Number }
   }
 }, {
   timestamps: true

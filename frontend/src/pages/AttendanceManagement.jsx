@@ -11,7 +11,8 @@ import {
   Eye, 
   X, 
   RefreshCw, 
-  FileImage
+  FileImage,
+  MapPin
 } from 'lucide-react';
 
 const AttendanceManagement = () => {
@@ -236,6 +237,7 @@ const AttendanceManagement = () => {
                     <th className="p-4">Check In</th>
                     <th className="p-4">Check Out</th>
                     <th className="p-4">Hours</th>
+                    <th className="p-4">Location</th>
                     <th className="p-4">Status</th>
                     <th className="p-4 pr-5 text-right">Photo Audit</th>
                   </tr>
@@ -275,6 +277,22 @@ const AttendanceManagement = () => {
                         <td className="p-4 font-mono text-slate-600 text-sm">{formatTime(r.checkOut)}</td>
 
                         <td className="p-4 font-mono font-bold text-emerald-700 text-sm">{r.workingHours || '-'}</td>
+
+                        <td className="p-4">
+                          {r.location?.lat ? (
+                            <a
+                              href={`https://www.google.com/maps?q=${r.location.lat},${r.location.lng}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 bg-sky-50 text-sky-700 px-2.5 py-1 rounded-lg border border-sky-200/60 text-[11px] font-bold hover:bg-sky-100 transition-colors"
+                            >
+                              <MapPin className="w-3.5 h-3.5" />
+                              View Map
+                            </a>
+                          ) : (
+                            <span className="text-slate-400 text-xs">-</span>
+                          )}
+                        </td>
 
                         <td className="p-4">
                           <span className={r.status === 'Present' ? 'badge-success' : 'badge-neutral'}>
@@ -341,13 +359,26 @@ const AttendanceManagement = () => {
                       </div>
                     </div>
 
-                    <button
-                      onClick={() => openPhotoModal(r)}
-                      className="btn-secondary text-xs w-full py-2 flex items-center justify-center gap-1.5"
-                    >
-                      <Eye className="w-3.5 h-3.5 text-slate-600" />
-                      View Photo Evidence
-                    </button>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <button
+                        onClick={() => openPhotoModal(r)}
+                        className="btn-secondary text-xs w-full py-2 flex items-center justify-center gap-1.5"
+                      >
+                        <Eye className="w-3.5 h-3.5 text-slate-600" />
+                        View Photo Evidence
+                      </button>
+                      {r.location?.lat && (
+                        <a
+                          href={`https://www.google.com/maps?q=${r.location.lat},${r.location.lng}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-secondary text-xs w-full py-2 flex items-center justify-center gap-1.5 text-sky-700 bg-sky-50 border-sky-200/60 hover:bg-sky-100"
+                        >
+                          <MapPin className="w-3.5 h-3.5" />
+                          View GPS Location
+                        </a>
+                      )}
+                    </div>
                   </div>
                 );
               })}

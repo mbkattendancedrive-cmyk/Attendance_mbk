@@ -93,6 +93,16 @@ export const checkIn = async (req, res) => {
       return res.status(500).json({ message: 'Unable to upload attendance photo. Please try again.' });
     }
 
+    // Parse location data if provided
+    let locationData = null;
+    if (req.body.location) {
+      try {
+        locationData = JSON.parse(req.body.location);
+      } catch (err) {
+        console.error('Failed to parse location data:', err);
+      }
+    }
+
     // Create attendance record in MongoDB
     const newAttendance = await Attendance.create({
       employeeId: emp.employeeId,
@@ -107,6 +117,7 @@ export const checkIn = async (req, res) => {
         localPath: uploadResult.localPath,
         uploadedAt: now
       },
+      location: locationData,
       status: 'Present'
     });
 
@@ -149,9 +160,22 @@ export const checkOut = async (req, res) => {
       return res.status(400).json({ message: 'You have already checked out today.' });
     }
 
+    // Parse location data if provided
+    let locationData = null;
+    if (req.body.location) {
+      try {
+        locationData = JSON.parse(req.body.location);
+      } catch (err) {
+        console.error('Failed to parse location data:', err);
+      }
+    }
+
     attendance.checkOut = now;
     attendance.workingHours = calculateWorkingHours(attendance.checkIn, now);
     attendance.status = 'Checked Out';
+    if (locationData) {
+      attendance.checkOutLocation = locationData;
+    }
 
     await attendance.save();
 
