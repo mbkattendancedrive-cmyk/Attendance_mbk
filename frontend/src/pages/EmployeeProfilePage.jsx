@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { 
   Mail, 
@@ -6,11 +7,18 @@ import {
   Briefcase, 
   Award, 
   QrCode,
-  ExternalLink
+  ExternalLink,
+  LogOut
 } from 'lucide-react';
 
 const EmployeeProfilePage = () => {
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   if (!user) return null;
 
@@ -21,6 +29,14 @@ const EmployeeProfilePage = () => {
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">My Personnel Profile</h1>
           <p className="text-sm text-slate-500 mt-1">Corporate credentials, employee ID card details, and performance score.</p>
         </div>
+        
+        <button
+          onClick={handleLogout}
+          className="btn-danger w-full sm:w-auto text-xs py-2 px-4 shadow-rose-600/20"
+        >
+          <LogOut className="w-4 h-4" />
+          Logout
+        </button>
       </div>
 
       <div className="card-saas p-6 space-y-6">
