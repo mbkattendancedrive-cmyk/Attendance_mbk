@@ -1,5 +1,5 @@
+import 'dotenv/config';
 import express from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
 import { connectDB } from './config/db.js';
 
@@ -10,9 +10,6 @@ import analyticsRoutes from './routes/analyticsRoutes.js';
 import activityLogRoutes from './routes/activityLogRoutes.js';
 import canvaRoutes from './routes/canvaRoutes.js';
 import attendanceRoutes from './routes/attendanceRoutes.js';
-
-// Load env vars
-dotenv.config();
 
 // Connect to database
 connectDB();
