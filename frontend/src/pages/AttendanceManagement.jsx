@@ -284,10 +284,12 @@ const AttendanceManagement = () => {
                               href={`https://www.google.com/maps?q=${r.location.lat},${r.location.lng}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 bg-sky-50 text-sky-700 px-2.5 py-1 rounded-lg border border-sky-200/60 text-[11px] font-bold hover:bg-sky-100 transition-colors"
+                              className="inline-flex items-center gap-1 text-sky-700 hover:text-sky-900 transition-colors max-w-[200px]"
                             >
-                              <MapPin className="w-3.5 h-3.5" />
-                              View Map
+                              <MapPin className="w-3.5 h-3.5 shrink-0" />
+                              <span className="text-[11px] font-bold truncate" title={r.location.address || 'View Map'}>
+                                {r.location.address || 'View Map'}
+                              </span>
                             </a>
                           ) : (
                             <span className="text-slate-400 text-xs">-</span>
@@ -372,10 +374,11 @@ const AttendanceManagement = () => {
                           href={`https://www.google.com/maps?q=${r.location.lat},${r.location.lng}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="btn-secondary text-xs w-full py-2 flex items-center justify-center gap-1.5 text-sky-700 bg-sky-50 border-sky-200/60 hover:bg-sky-100"
+                          className="btn-secondary text-xs w-full py-2 flex items-center justify-center gap-1.5 text-sky-700 bg-sky-50 border-sky-200/60 hover:bg-sky-100 truncate px-2"
+                          title={r.location.address || 'View GPS Location'}
                         >
-                          <MapPin className="w-3.5 h-3.5" />
-                          View GPS Location
+                          <MapPin className="w-3.5 h-3.5 shrink-0" />
+                          <span className="truncate">{r.location.address || 'View GPS Location'}</span>
                         </a>
                       )}
                     </div>

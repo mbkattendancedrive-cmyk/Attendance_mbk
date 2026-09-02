@@ -77,10 +77,26 @@ const EmployeeAttendance = () => {
     }
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        
+        let addressStr = '';
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+          const data = await res.json();
+          if (data && data.display_name) {
+            addressStr = data.display_name;
+          }
+        } catch (err) {
+          console.error("Geocoding failed:", err);
+          // Non-fatal, we just won't have an address
+        }
+
         setLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
+          lat,
+          lng,
+          address: addressStr
         });
         setLocationLoading(false);
       },
@@ -353,9 +369,17 @@ const EmployeeAttendance = () => {
 
                 <div>
                   <h4 className="text-base font-extrabold text-slate-900">Location Acquired &bull; Take Photo</h4>
-                  <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto font-medium">
-                    Tap below to open your camera app directly to take a live photo or select a saved photo file.
-                  </p>
+                  {location?.address ? (
+                    <div className="mt-2.5 p-2 bg-emerald-100/50 rounded-lg border border-emerald-200/60 inline-block max-w-sm">
+                      <p className="text-xs text-emerald-800 font-semibold leading-relaxed">
+                        📍 {location.address}
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto font-medium">
+                      Tap below to open your camera app directly to take a live photo or select a saved photo file.
+                    </p>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 max-w-md mx-auto">
@@ -570,10 +594,12 @@ const EmployeeAttendance = () => {
                             href={`https://www.google.com/maps?q=${record.location.lat},${record.location.lng}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 bg-sky-50 text-sky-700 px-2.5 py-1 rounded-lg border border-sky-200/60 text-[11px] font-bold hover:bg-sky-100 transition-colors"
+                            className="inline-flex items-center gap-1 text-sky-700 hover:text-sky-900 transition-colors max-w-[150px]"
                           >
-                            <MapPin className="w-3.5 h-3.5" />
-                            Map
+                            <MapPin className="w-3.5 h-3.5 shrink-0" />
+                            <span className="text-[11px] font-bold truncate" title={record.location.address || 'Map'}>
+                              {record.location.address || 'Map'}
+                            </span>
                           </a>
                         ) : (
                           <span className="text-slate-400 text-xs">-</span>
@@ -633,10 +659,11 @@ const EmployeeAttendance = () => {
                           href={`https://www.google.com/maps?q=${record.location.lat},${record.location.lng}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="btn-secondary text-xs w-full py-2 flex items-center justify-center gap-1.5 text-sky-700 bg-sky-50 border-sky-200/60 hover:bg-sky-100"
+                          className="btn-secondary text-xs w-full py-2 flex items-center justify-center gap-1.5 text-sky-700 bg-sky-50 border-sky-200/60 hover:bg-sky-100 truncate px-2"
+                          title={record.location.address || 'View GPS Location'}
                         >
-                          <MapPin className="w-3.5 h-3.5" />
-                          View GPS Location
+                          <MapPin className="w-3.5 h-3.5 shrink-0" />
+                          <span className="truncate">{record.location.address || 'View GPS Location'}</span>
                         </a>
                       )}
                     </div>
