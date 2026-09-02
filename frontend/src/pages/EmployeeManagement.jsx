@@ -938,7 +938,7 @@ const EmployeeManagement = () => {
                         value={formData.password}
                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                         className="input-saas w-full text-sm"
-                        placeholder={editEmployee ? "••••••••" : "Password@123"}
+                        placeholder={editEmployee ? "Enter new password..." : "Password@123"}
                       />
                     </div>
                   </div>
