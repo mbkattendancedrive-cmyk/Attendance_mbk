@@ -301,8 +301,9 @@ const EmployeeManagement = () => {
             </div>
             <button
               onClick={() => setSelectedDept('All')}
-              className="text-xs font-semibold text-slate-700 hover:text-slate-900 underline"
+              className="btn-secondary text-sm bg-white shadow-sm flex items-center gap-2"
             >
+              <Users className="w-4 h-4 text-slate-500" />
               View All Employees ({employees.length})
             </button>
           </div>
