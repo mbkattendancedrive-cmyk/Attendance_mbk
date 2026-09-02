@@ -260,25 +260,25 @@ const EmployeeAttendance = () => {
               </p>
             </div>
 
+            {/* Hidden File Inputs - Always rendered so labels can trigger them from anywhere */}
+            <input
+              type="file"
+              id="geo-tag-camera-input"
+              accept="image/*"
+              capture="environment"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            <input
+              type="file"
+              id="geo-tag-photo-input"
+              accept=".jpg,.jpeg,.png,image/*"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+
             {!previewUrl ? (
               <div className="border-2 border-dashed border-slate-300 hover:border-slate-400 rounded-2xl p-6 sm:p-8 text-center bg-slate-50/50 hover:bg-slate-50 transition-colors space-y-4">
-                {/* Hidden File Inputs */}
-                <input
-                  type="file"
-                  id="geo-tag-camera-input"
-                  accept="image/*"
-                  capture="environment"
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-                <input
-                  type="file"
-                  id="geo-tag-photo-input"
-                  accept=".jpg,.jpeg,.png,image/*"
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-
                 <div className="w-16 h-16 bg-white rounded-2xl border border-slate-300 flex items-center justify-center mx-auto text-slate-700 shadow-sm">
                   <Camera className="w-8 h-8" />
                 </div>
@@ -328,16 +328,24 @@ const EmployeeAttendance = () => {
                   />
                 </div>
 
-                <div className="flex items-center justify-between pt-1">
-                  <button
-                    type="button"
-                    onClick={handleClearPhoto}
-                    disabled={submitting}
-                    className="btn-secondary text-xs bg-slate-800 text-slate-200 border-slate-700 hover:bg-slate-700"
-                  >
-                    Change Photo
-                  </button>
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
                   <span className="text-xs text-slate-400">Original image untouched</span>
+                  <div className="flex gap-2 w-full sm:w-auto">
+                    <label
+                      htmlFor="geo-tag-photo-input"
+                      className="btn-secondary text-xs bg-slate-800 text-slate-200 border-slate-700 hover:bg-slate-700 flex-1 sm:flex-none justify-center cursor-pointer flex items-center gap-1.5"
+                    >
+                      <Upload className="w-3.5 h-3.5" />
+                      Pick Another
+                    </label>
+                    <label
+                      htmlFor="geo-tag-camera-input"
+                      className="btn-primary text-xs flex-1 sm:flex-none justify-center cursor-pointer flex items-center gap-1.5"
+                    >
+                      <Camera className="w-3.5 h-3.5 text-white" />
+                      Retake Photo
+                    </label>
+                  </div>
                 </div>
               </div>
             )}
