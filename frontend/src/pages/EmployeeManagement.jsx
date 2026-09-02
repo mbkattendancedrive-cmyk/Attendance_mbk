@@ -1091,6 +1091,14 @@ const EmployeeManagement = () => {
         </div>,
         document.body
       )}
+      {/* Success Toast Notification */}
+      {successMessage && createPortal(
+        <div className="fixed bottom-6 right-6 z-[60] bg-emerald-600 text-white px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 animate-fade-in border border-emerald-500/50">
+          <CheckCircle2 className="w-5 h-5" />
+          <span className="font-semibold text-sm">{successMessage}</span>
+        </div>,
+        document.body
+      )}
     </div>
   );
 };
