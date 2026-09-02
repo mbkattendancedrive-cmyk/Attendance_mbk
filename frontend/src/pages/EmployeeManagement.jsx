@@ -1025,31 +1025,29 @@ const EmployeeManagement = () => {
                     placeholder="Residential address details..."
                   />
                 </div>
+
+                {/* Footer */}
+                <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 shrink-0 mt-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowAddModal(false);
+                      setEditEmployee(null);
+                      resetForm();
+                    }}
+                    className="btn-secondary text-xs"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit" 
+                    className="btn-primary text-xs"
+                  >
+                    {editEmployee ? 'Update Profile' : 'Register Employee'}
+                  </button>
+                </div>
               </form>
             </div>
-
-            {/* Footer */}
-            <div className="flex justify-end gap-3 pt-3 border-t border-slate-100 shrink-0 mt-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setShowAddModal(false);
-                  setEditEmployee(null);
-                  resetForm();
-                }}
-                className="btn-secondary text-xs"
-              >
-                Cancel
-              </button>
-              <button 
-                type="submit" 
-                form="employee-form"
-                className="btn-primary text-xs"
-              >
-                {editEmployee ? 'Update Profile' : 'Register Employee'}
-              </button>
-            </div>
-
           </div>
         </div>,
         document.body
