@@ -778,7 +778,7 @@ const EmployeeManagement = () => {
       )}
 
       {/* Add / Edit Employee Modal */}
-      {(showAddModal || editEmployee) && (
+      {(showAddModal || editEmployee) && createPortal(
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white border border-slate-200 rounded-2xl p-6 max-w-3xl w-full max-h-[90vh] flex flex-col relative shadow-xl my-auto animate-fade-in">
             
@@ -1046,7 +1046,8 @@ const EmployeeManagement = () => {
             </div>
 
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Delete Employee Confirmation Modal */}
