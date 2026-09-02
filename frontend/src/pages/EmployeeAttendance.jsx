@@ -16,7 +16,8 @@ import {
   History,
   FileImage,
   Building2,
-  Check
+  Check,
+  Camera
 } from 'lucide-react';
 
 const EmployeeAttendance = () => {
@@ -253,38 +254,59 @@ const EmployeeAttendance = () => {
           /* Check In Form */
           <form onSubmit={handleCheckInSubmit} className="space-y-5">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Upload Jio Tag Attendance Photo</h3>
+              <h3 className="text-base font-bold text-slate-900">Upload Geo Tag Attendance Photo</h3>
               <p className="text-xs text-slate-500 mt-1">
-                Upload your Jio Tag photo from your device to complete check-in verification.
+                Upload your Geo Tag photo from your device to complete check-in verification.
               </p>
             </div>
 
             {!previewUrl ? (
-              <div className="border-2 border-dashed border-slate-200 hover:border-slate-400 rounded-2xl p-8 text-center bg-slate-50/50 hover:bg-slate-50 transition-colors cursor-pointer group">
+              <div className="border-2 border-dashed border-slate-300 hover:border-slate-400 rounded-2xl p-6 sm:p-8 text-center bg-slate-50/50 hover:bg-slate-50 transition-colors space-y-4">
+                {/* Hidden File Inputs */}
                 <input
                   type="file"
-                  id="jio-tag-photo-input"
-                  accept=".jpg,.jpeg,.png"
+                  id="geo-tag-camera-input"
+                  accept="image/*"
+                  capture="environment"
                   onChange={handleFileChange}
                   className="hidden"
                 />
-                <label htmlFor="jio-tag-photo-input" className="cursor-pointer block space-y-3">
-                  <div className="w-14 h-14 bg-white rounded-2xl border border-slate-200 flex items-center justify-center mx-auto text-slate-400 group-hover:text-slate-700 transition-colors shadow-2xs">
-                    <FileImage className="w-7 h-7" />
-                  </div>
-                  <div>
-                    <span className="text-sm font-bold text-slate-900 group-hover:text-slate-800 transition-colors">
-                      Choose Jio Tag Photo
-                    </span>
-                    <p className="text-xs text-slate-400 mt-1">
-                      JPG, JPEG, or PNG (Max 5 MB)
-                    </p>
-                  </div>
-                  <div className="btn-secondary text-xs inline-flex items-center gap-2">
-                    <Upload className="w-4 h-4 text-slate-500" />
-                    Select Photo File
-                  </div>
-                </label>
+                <input
+                  type="file"
+                  id="geo-tag-photo-input"
+                  accept=".jpg,.jpeg,.png,image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+
+                <div className="w-16 h-16 bg-white rounded-2xl border border-slate-300 flex items-center justify-center mx-auto text-slate-700 shadow-sm">
+                  <Camera className="w-8 h-8" />
+                </div>
+
+                <div>
+                  <h4 className="text-base font-extrabold text-slate-900">Take or Upload Geo Tag Attendance Photo</h4>
+                  <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto font-medium">
+                    Tap below to open your camera app directly to take a live photo or select a saved photo file.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 max-w-md mx-auto">
+                  <label
+                    htmlFor="geo-tag-camera-input"
+                    className="btn-primary py-3.5 text-base sm:text-sm cursor-pointer w-full flex items-center justify-center gap-2 font-bold shadow-sm active:scale-[0.98]"
+                  >
+                    <Camera className="w-5 h-5 text-white" />
+                    Open Camera App
+                  </label>
+
+                  <label
+                    htmlFor="geo-tag-photo-input"
+                    className="btn-secondary py-3.5 text-base sm:text-sm cursor-pointer w-full flex items-center justify-center gap-2 font-bold shadow-sm active:scale-[0.98]"
+                  >
+                    <Upload className="w-5 h-5 text-slate-600" />
+                    Select Gallery Photo
+                  </label>
+                </div>
               </div>
             ) : (
               <div className="bg-slate-900 text-white rounded-2xl p-5 space-y-4 shadow-sm">
