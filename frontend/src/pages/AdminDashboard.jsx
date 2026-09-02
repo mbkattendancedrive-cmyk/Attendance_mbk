@@ -10,7 +10,8 @@ import {
   Activity,
   ArrowUpRight,
   ClipboardList,
-  Plus
+  Plus,
+  Calendar
 } from 'lucide-react';
 import { 
   PieChart, 
@@ -79,12 +80,16 @@ const AdminDashboard = () => {
           <p className="text-sm text-slate-500 mt-1">Real-time workforce metrics, ID verification status, and task completion rates.</p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Link to="/admin/employees?add=true" className="btn-primary text-sm">
-            <Plus className="w-4 h-4" />
+        <div className="flex flex-wrap items-center gap-3 justify-end">
+          <Link to="/admin/attendance" className="btn-primary text-sm bg-indigo-600 hover:bg-indigo-700 shadow-indigo-600/10 focus:ring-indigo-600/20">
+            <Calendar className="w-4 h-4" />
+            Check Attendance
+          </Link>
+          <Link to="/admin/employees?add=true" className="btn-secondary text-sm bg-white">
+            <Plus className="w-4 h-4 text-slate-500" />
             Add Employee
           </Link>
-          <Link to="/admin/tasks?add=true" className="btn-secondary text-sm">
+          <Link to="/admin/tasks?add=true" className="btn-secondary text-sm bg-white">
             <Plus className="w-4 h-4 text-slate-500" />
             New Task
           </Link>
