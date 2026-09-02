@@ -25,9 +25,12 @@ import {
   User,
   Heart,
   ShieldAlert,
-  Building2,
   ChevronLeft,
-  ArrowRight
+  ArrowRight,
+  Key,
+  EyeOff,
+  ShieldCheck,
+  Copy
 } from 'lucide-react';
 
 const EmployeeManagement = () => {
@@ -39,12 +42,17 @@ const EmployeeManagement = () => {
   const [departmentFilter, setDepartmentFilter] = useState('All');
   const [selectedDept, setSelectedDept] = useState(null);
 
-  // Modals state
   const [selectedIDCardEmp, setSelectedIDCardEmp] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showCredentialsModal, setShowCredentialsModal] = useState(false);
+  const [visiblePasswords, setVisiblePasswords] = useState({});
   const [editEmployee, setEditEmployee] = useState(null);
   const [confirmStatusEmp, setConfirmStatusEmp] = useState(null);
   const [deleteConfirmEmp, setDeleteConfirmEmp] = useState(null);
+
+  const togglePasswordVisibility = (id) => {
+    setVisiblePasswords(prev => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const handleDeleteEmployee = async () => {
     if (!deleteConfirmEmp) return;
@@ -246,16 +254,26 @@ const EmployeeManagement = () => {
           <p className="text-sm text-slate-500 mt-1">Manage personnel records, issue corporate identity badges, and view performance.</p>
         </div>
 
-        <button
-          onClick={() => {
-            resetForm();
-            setShowAddModal(true);
-          }}
-          className="btn-primary text-sm"
-        >
-          <Plus className="w-4 h-4" />
-          Add Employee
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowCredentialsModal(true)}
+            className="btn-secondary text-sm flex items-center gap-2 border-slate-300 text-slate-700 hover:bg-slate-100"
+          >
+            <Key className="w-4 h-4 text-amber-600" />
+            Credentials Vault
+          </button>
+
+          <button
+            onClick={() => {
+              resetForm();
+              setShowAddModal(true);
+            }}
+            className="btn-primary text-sm"
+          >
+            <Plus className="w-4 h-4" />
+            Add Employee
+          </button>
+        </div>
       </div>
 
       {/* Controls Filter Bar */}
@@ -1081,6 +1099,103 @@ const EmployeeManagement = () => {
                 Delete Permanently
               </button>
             </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Credentials Vault Modal (Admin View Username & Current Password) */}
+      {showCredentialsModal && createPortal(
+        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white border border-slate-200 rounded-3xl max-w-3xl w-full max-h-[85vh] flex flex-col relative shadow-2xl animate-fade-in my-auto overflow-hidden">
+            
+            {/* Modal Header */}
+            <div className="bg-slate-900 p-6 text-white flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-amber-500/20 border border-amber-500/30 rounded-2xl text-amber-400">
+                  <Key className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    Employee Credentials Vault
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-0.5">Admin view for user login IDs and current access passwords.</p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowCredentialsModal(false)}
+                className="p-2 text-slate-400 hover:text-white rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Scrollable List */}
+            <div className="p-6 overflow-y-auto flex-1 space-y-4">
+              <div className="flex items-center justify-between bg-amber-50 border border-amber-200 p-3 rounded-2xl text-amber-800 text-xs font-semibold">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-amber-600 shrink-0" />
+                  <span>Only authorized administrators can access these employee login credentials.</span>
+                </div>
+                <span className="bg-amber-200/80 px-2.5 py-0.5 rounded-full font-mono text-[11px] font-bold">
+                  {employees.length} Accounts
+                </span>
+              </div>
+
+              <div className="divide-y divide-slate-100 border border-slate-200 rounded-2xl overflow-hidden bg-slate-50/50">
+                {employees.map((emp) => (
+                  <div key={emp._id} className="p-4 bg-white hover:bg-slate-50/80 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      {emp.profilePhoto ? (
+                        <img src={emp.profilePhoto} alt={emp.name} className="w-10 h-10 rounded-full object-cover border border-slate-200" />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-slate-900 text-white font-bold text-xs flex items-center justify-center">
+                          {emp.name[0]}
+                        </div>
+                      )}
+                      <div>
+                        <div className="font-bold text-slate-900 text-sm flex items-center gap-2">
+                          {emp.name}
+                          <span className="font-mono text-xs text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 font-semibold">
+                            {emp.employeeId}
+                          </span>
+                        </div>
+                        <div className="text-xs text-slate-500 font-medium mt-0.5">{emp.email} • <span className="text-slate-700">{emp.department}</span></div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 bg-slate-100/90 border border-slate-200 p-2 rounded-xl self-start sm:self-auto">
+                      <div className="space-y-0.5 px-1">
+                        <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Password</span>
+                        <div className="font-mono text-xs font-bold text-slate-800 tracking-wider">
+                          {visiblePasswords[emp._id] ? (emp.plainTextPassword || 'Password@123') : '••••••••'}
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => togglePasswordVisibility(emp._id)}
+                        className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg transition-colors ml-2 shadow-2xs border border-slate-200/60"
+                        title={visiblePasswords[emp._id] ? "Hide Password" : "Show Password"}
+                      >
+                        {visiblePasswords[emp._id] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-slate-100 bg-slate-50 flex justify-end shrink-0">
+              <button
+                onClick={() => setShowCredentialsModal(false)}
+                className="btn-primary text-xs px-6 py-2"
+              >
+                Close Vault
+              </button>
+            </div>
+
           </div>
         </div>,
         document.body
