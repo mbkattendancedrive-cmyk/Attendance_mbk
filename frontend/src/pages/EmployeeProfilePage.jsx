@@ -89,15 +89,6 @@ const EmployeeProfilePage = () => {
               Download QR Code
             </button>
 
-            <a
-              href="https://canva.link/rmuleulxpdvg2nd"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-secondary text-xs"
-            >
-              <ExternalLink className="w-4 h-4 text-slate-500" />
-              Edit in Canva
-            </a>
           </div>
         </div>
 
