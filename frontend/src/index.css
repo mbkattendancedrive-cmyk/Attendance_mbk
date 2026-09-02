@@ -103,12 +103,12 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* High-End Architectural Big Boxes Grid Pattern (64px x 64px) */
+/* High-End Architectural Big Boxes Grid Pattern (128px x 128px) */
 .bg-grid-pattern, .bg-architectural-grid, .bg-dot-pattern {
   background-color: #FAFAFA;
   background-image: 
     linear-gradient(to right, rgba(203, 213, 225, 0.6) 1.25px, transparent 1.25px),
     linear-gradient(to bottom, rgba(203, 213, 225, 0.6) 1.25px, transparent 1.25px);
-  background-size: 64px 64px;
+  background-size: 128px 128px;
 }
 

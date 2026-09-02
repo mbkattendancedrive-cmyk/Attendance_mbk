@@ -40,9 +40,7 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-dot-pattern text-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
       
-      {/* Decorative Ambient Gradient Orbs */}
-      <div className="w-96 h-96 bg-indigo-200/40 rounded-full blur-3xl absolute top-10 -left-20 pointer-events-none" />
-      <div className="w-96 h-96 bg-emerald-200/40 rounded-full blur-3xl absolute bottom-10 -right-20 pointer-events-none" />
+      {/* Decorative Ambient Gradient Orbs Removed */}
 
       <div className="w-full max-w-md space-y-6 relative z-10 animate-fade-in">
         {/* Brand Header */}
