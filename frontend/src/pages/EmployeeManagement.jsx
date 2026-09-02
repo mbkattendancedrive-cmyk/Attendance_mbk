@@ -47,12 +47,28 @@ const EmployeeManagement = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showCredentialsModal, setShowCredentialsModal] = useState(false);
   const [visiblePasswords, setVisiblePasswords] = useState({});
+  const [editingPasswordId, setEditingPasswordId] = useState(null);
+  const [newPasswordInput, setNewPasswordInput] = useState('');
   const [editEmployee, setEditEmployee] = useState(null);
   const [confirmStatusEmp, setConfirmStatusEmp] = useState(null);
   const [deleteConfirmEmp, setDeleteConfirmEmp] = useState(null);
 
   const togglePasswordVisibility = (id) => {
     setVisiblePasswords(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const handleSaveVaultPassword = async (empId) => {
+    if (!newPasswordInput.trim()) return;
+    try {
+      await API.put(`/employees/${empId}`, { password: newPasswordInput });
+      setSuccessMessage('Password updated successfully!');
+      setTimeout(() => setSuccessMessage(''), 3000);
+      setEditingPasswordId(null);
+      setNewPasswordInput('');
+      fetchEmployees();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to update password');
+    }
   };
 
   const handleDeleteEmployee = async () => {
@@ -1167,20 +1183,57 @@ const EmployeeManagement = () => {
                     </div>
 
                     <div className="flex items-center gap-2 bg-slate-100/90 border border-slate-200 p-2 rounded-xl self-start sm:self-auto">
-                      <div className="space-y-0.5 px-1">
-                        <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Password</span>
-                        <div className="font-mono text-xs font-bold text-slate-800 tracking-wider">
-                          {visiblePasswords[emp._id] ? (emp.plainTextPassword || 'Password@123') : '••••••••'}
+                      {editingPasswordId === emp._id ? (
+                        <div className="flex items-center gap-1.5">
+                          <input
+                            type="text"
+                            value={newPasswordInput}
+                            onChange={(e) => setNewPasswordInput(e.target.value)}
+                            placeholder="New password..."
+                            className="input-saas text-xs py-1 px-2.5 w-36"
+                          />
+                          <button
+                            onClick={() => handleSaveVaultPassword(emp._id)}
+                            className="btn-primary text-xs py-1 px-2.5 bg-emerald-600 hover:bg-emerald-700"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => setEditingPasswordId(null)}
+                            className="btn-secondary text-xs py-1 px-2"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
                         </div>
-                      </div>
+                      ) : (
+                        <>
+                          <div className="space-y-0.5 px-1 min-w-[100px]">
+                            <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Password</span>
+                            <div className="font-mono text-xs font-bold text-slate-800 tracking-wider">
+                              {visiblePasswords[emp._id] ? (emp.plainTextPassword || 'Password@123') : '••••••••'}
+                            </div>
+                          </div>
 
-                      <button
-                        onClick={() => togglePasswordVisibility(emp._id)}
-                        className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg transition-colors ml-2 shadow-2xs border border-slate-200/60"
-                        title={visiblePasswords[emp._id] ? "Hide Password" : "Show Password"}
-                      >
-                        {visiblePasswords[emp._id] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </button>
+                          <button
+                            onClick={() => togglePasswordVisibility(emp._id)}
+                            className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-white rounded-lg transition-colors shadow-2xs border border-slate-200/60"
+                            title={visiblePasswords[emp._id] ? "Hide Password" : "Show Password"}
+                          >
+                            {visiblePasswords[emp._id] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              setEditingPasswordId(emp._id);
+                              setNewPasswordInput(emp.plainTextPassword || '');
+                            }}
+                            className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-white rounded-lg transition-colors shadow-2xs border border-slate-200/60"
+                            title="Quick Change Password"
+                          >
+                            <Edit3 className="w-4 h-4" />
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                 ))}
