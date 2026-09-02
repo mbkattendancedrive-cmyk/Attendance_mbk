@@ -63,6 +63,8 @@ const EmployeeManagement = () => {
 
   // Form State for Add/Edit
   const [formData, setFormData] = useState({
+    employeeId: '',
+    password: '',
     name: '',
     email: '',
     phone: '',
@@ -138,6 +140,8 @@ const EmployeeManagement = () => {
 
   const resetForm = () => {
     setFormData({
+      employeeId: '',
+      password: '',
       name: '',
       email: '',
       phone: '',
@@ -156,6 +160,8 @@ const EmployeeManagement = () => {
   const openEditModal = (emp) => {
     setEditEmployee(emp);
     setFormData({
+      employeeId: emp.employeeId || '',
+      password: '',
       name: emp.name || '',
       email: emp.email || '',
       phone: emp.phone || '',
@@ -913,6 +919,30 @@ const EmployeeManagement = () => {
                 <div className="space-y-3 pt-4 border-t border-slate-100">
                   <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Corporate Assignments</span>
                   
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-3 border-b border-slate-100">
+                    <div className="space-y-1">
+                      <label className="block text-xs font-semibold text-slate-700">Custom Employee ID <span className="text-slate-400 font-normal">(Optional)</span></label>
+                      <input
+                        type="text"
+                        disabled={!!editEmployee}
+                        value={formData.employeeId}
+                        onChange={(e) => setFormData({ ...formData, employeeId: e.target.value })}
+                        className="input-saas w-full text-sm disabled:bg-slate-50 disabled:text-slate-500"
+                        placeholder="Leave blank to auto-generate"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="block text-xs font-semibold text-slate-700">Login Password {editEmployee && <span className="text-slate-400 font-normal">(Leave blank to keep current)</span>}</label>
+                      <input
+                        type="text"
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        className="input-saas w-full text-sm"
+                        placeholder={editEmployee ? "••••••••" : "Password@123"}
+                      />
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div className="space-y-1">
                       <label className="block text-xs font-semibold text-slate-700">Corporate Email</label>
