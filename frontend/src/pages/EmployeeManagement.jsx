@@ -294,18 +294,18 @@ const EmployeeManagement = () => {
       ) : !selectedDept && !searchTerm ? (
         /* Department Selection Cards */
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-base font-bold text-slate-900 uppercase tracking-wider">Departments</h2>
-              <p className="text-xs text-slate-500 mt-0.5">Select a department to explore employee records</p>
-            </div>
+          <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-4">
             <button
               onClick={() => setSelectedDept('All')}
-              className="btn-secondary text-sm bg-white shadow-sm flex items-center gap-2"
+              className="btn-secondary text-sm bg-white shadow-sm flex items-center justify-center sm:justify-start gap-2 w-full sm:w-auto"
             >
               <Users className="w-4 h-4 text-slate-500" />
               View All Employees ({employees.length})
             </button>
+            <div className="text-center sm:text-right">
+              <h2 className="text-base font-bold text-slate-900 uppercase tracking-wider">Departments</h2>
+              <p className="text-xs text-slate-500 mt-0.5">Select a department to explore employee records</p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
