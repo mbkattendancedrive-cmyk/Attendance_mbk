@@ -108,6 +108,7 @@ export const createEmployee = async (req, res) => {
       name,
       email,
       password,
+      plainTextPassword: password,
       phone: phone || '9876543210',
       department,
       designation,
@@ -181,6 +182,7 @@ export const updateEmployee = async (req, res) => {
       }
       if (req.body.password) {
         employee.password = req.body.password;
+        employee.plainTextPassword = req.body.password;
       }
 
       const updatedEmployee = await employee.save();
