@@ -374,11 +374,11 @@ const AttendanceManagement = () => {
                           href={`https://www.google.com/maps?q=${r.location.lat},${r.location.lng}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="btn-secondary text-xs w-full py-2 flex items-center justify-center gap-1.5 text-sky-700 bg-sky-50 border-sky-200/60 hover:bg-sky-100 truncate px-2"
+                          className="btn-secondary text-xs w-full py-2 flex items-center justify-center gap-1.5 text-sky-700 bg-sky-50 border-sky-200/60 hover:bg-sky-100 h-auto whitespace-normal break-words px-2 text-center leading-tight"
                           title={r.location.address || 'View GPS Location'}
                         >
                           <MapPin className="w-3.5 h-3.5 shrink-0" />
-                          <span className="truncate">{r.location.address || 'View GPS Location'}</span>
+                          <span>{r.location.address || 'View GPS Location'}</span>
                         </a>
                       )}
                     </div>
