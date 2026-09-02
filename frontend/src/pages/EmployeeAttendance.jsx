@@ -473,6 +473,12 @@ const EmployeeAttendance = () => {
                 <div>
                   <h4 className="font-extrabold text-base text-emerald-950">Attendance Marked Successfully</h4>
                   <p className="text-xs text-emerald-700 font-medium mt-0.5">Check-in registered and verified on Google Drive cloud storage.</p>
+                  {todayData?.location?.address && (
+                    <div className="flex items-start gap-1.5 mt-2 text-emerald-800 bg-emerald-100/60 py-1.5 px-2.5 rounded-lg border border-emerald-200/60 inline-flex max-w-sm">
+                      <MapPin className="w-3.5 h-3.5 shrink-0 mt-px" />
+                      <span className="text-[11px] font-bold leading-tight whitespace-normal break-words">{todayData.location.address}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
