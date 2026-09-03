@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { Lock, Mail, ShieldCheck, UserCheck, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { Lock, Mail, AlertCircle, Eye, EyeOff, QrCode, ArrowRight } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -10,8 +10,19 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const { login } = useContext(AuthContext);
+  const { user, login } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  // Auto-redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      if (user.role === 'admin') {
+        navigate('/admin', { replace: true });
+      } else if (user.role === 'employee') {
+        navigate('/employee', { replace: true });
+      }
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,54 +30,68 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const user = await login(email, password);
-      if (user.role === 'admin') {
+      const loggedUser = await login(email, password);
+      if (loggedUser?.role === 'admin') {
         navigate('/admin');
       } else {
         navigate('/employee');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please check credentials.');
+      setError(err.response?.data?.message || 'Invalid credentials. Please check your details and try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleQuickLogin = (demoEmail, demoPassword) => {
-    setEmail(demoEmail);
-    setPassword(demoPassword);
-  };
-
   return (
-    <div className="min-h-screen bg-dot-pattern text-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between selection:bg-slate-900 selection:text-white">
       
-      {/* Decorative Ambient Gradient Orbs Removed */}
+      {/* Header */}
+      <header className="bg-white border-b border-slate-200/80 py-3.5 px-6 shadow-2xs">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-3">
+            <img src="/sm_groups_logo.png" alt="THE SM GROUPS" className="h-10 object-contain" />
+            <div>
+              <h1 className="text-base font-bold text-slate-900 tracking-tight leading-none">THE SM GROUPS</h1>
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">Enterprise Portal</p>
+            </div>
+          </Link>
 
-      <div className="w-full max-w-md space-y-6 relative z-10 animate-fade-in">
-        {/* Brand Header */}
-        <div className="text-center space-y-3">
-          <div className="w-32 h-32 bg-white p-4 rounded-3xl shadow-lg inline-flex items-center justify-center border-2 border-slate-300/90">
-            <img src="/sm_groups_logo.png" alt="THE SM GROUPS" className="w-full h-full object-contain" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Sign in to SM Groups</h1>
-            <p className="text-xs text-slate-500 font-semibold mt-1">Enterprise Management & Verification Platform</p>
-          </div>
+          <Link
+            to="/scan"
+            className="btn-secondary text-xs font-semibold"
+          >
+            <QrCode className="w-4 h-4 text-slate-600" />
+            QR Scanner Utility
+          </Link>
         </div>
+      </header>
 
-        {/* Login Card with Crisp High-Contrast Border */}
-        <div className="bg-white rounded-3xl p-7 border-2 border-slate-300/90 shadow-md space-y-5">
+      {/* Main Container */}
+      <main className="max-w-md mx-auto w-full px-4 sm:px-6 py-10 my-auto">
+        <div className="bg-white rounded-3xl p-7 sm:p-8 border-2 border-slate-300/90 shadow-xl space-y-6 animate-fade-in">
+          
+          <div className="text-center space-y-3">
+            <div className="w-20 h-20 bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-xs inline-flex items-center justify-center">
+              <img src="/sm_groups_logo.png" alt="THE SM GROUPS" className="w-full h-full object-contain" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-slate-900 tracking-tight">Sign In to Your Workspace</h2>
+              <p className="text-xs text-slate-500 font-medium mt-1">Enterprise Management & Workforce Portal</p>
+            </div>
+          </div>
+
           {error && (
-            <div className="p-3.5 bg-rose-50 border border-rose-200/80 text-rose-700 rounded-xl text-xs font-semibold flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+            <div className="p-3.5 bg-rose-50 border border-rose-200/80 text-rose-700 rounded-xl text-xs font-semibold flex items-start gap-2 animate-fade-in">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-700">
-                Employee ID or Email
+              <label className="block text-xs font-bold text-slate-700">
+                Employee ID or Email Address
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3 pointer-events-none" />
@@ -75,14 +100,14 @@ const Login = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="EMP001 or admin@company.com"
-                  className="input-saas w-full pl-10 text-sm"
+                  placeholder="e.g. EMP001 or name@company.com"
+                  className="input-saas w-full pl-10 text-sm py-2.5 font-medium"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-700">
+              <label className="block text-xs font-bold text-slate-700">
                 Password
               </label>
               <div className="relative">
@@ -93,12 +118,12 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="input-saas w-full pl-10 pr-10 text-sm"
+                  className="input-saas w-full pl-10 pr-10 text-sm py-2.5 font-medium"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-2.5 text-slate-400 hover:text-slate-600 focus:outline-none p-0.5 rounded-md transition-colors"
+                  className="absolute right-3.5 top-2.5 text-slate-400 hover:text-slate-600 focus:outline-none p-1 rounded-md transition-colors"
                   title={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -109,51 +134,33 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full py-2.5 text-sm font-semibold"
+              className="btn-primary w-full py-3 text-sm font-bold shadow-lg shadow-slate-900/10 flex items-center justify-center gap-2 mt-2"
             >
               {loading ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/20 border-t-white"></div>
               ) : (
-                'Sign In'
+                <>
+                  <span>Sign In</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
               )}
             </button>
           </form>
 
-          {/* Quick Demo Credentials */}
-          <div className="pt-4 border-t border-slate-100 space-y-3">
-            <p className="text-xs font-semibold text-slate-400 text-center uppercase tracking-wider">Quick Demo Login</p>
-            <div className="grid grid-cols-2 gap-2.5">
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('admin@company.com', 'password123')}
-                className="p-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/80 rounded-xl text-left transition-all group"
-              >
-                <div className="flex items-center gap-1.5 mb-0.5">
-                  <ShieldCheck className="w-4 h-4 text-slate-700" />
-                  <span className="font-bold text-xs text-slate-900">Admin</span>
-                </div>
-                <div className="text-xs text-slate-500 truncate">admin@company.com</div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('EMP001', 'Password@123')}
-                className="p-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/80 rounded-xl text-left transition-all group"
-              >
-                <div className="flex items-center gap-1.5 mb-0.5">
-                  <UserCheck className="w-4 h-4 text-slate-700" />
-                  <span className="font-bold text-xs text-slate-900">Employee</span>
-                </div>
-                <div className="text-xs text-slate-500 truncate">EMP001 (Gokul)</div>
-              </button>
-            </div>
+          <div className="pt-4 border-t border-slate-100 text-center">
+            <p className="text-[11px] text-slate-400 font-medium">
+              Protected by Enterprise Security Standards
+            </p>
           </div>
-        </div>
 
-        <p className="text-center text-xs text-slate-400 font-normal">
-          &copy; {new Date().getFullYear()} THE SM GROUPS. All rights reserved.
-        </p>
-      </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="py-4 text-center text-xs font-normal text-slate-400 border-t border-slate-200/80 bg-white">
+        © {new Date().getFullYear()} THE SM GROUPS • Enterprise Workforce Platform
+      </footer>
+
     </div>
   );
 };
