@@ -18,6 +18,7 @@ const HomePage = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Set Modern Crosshatch Weave (bg-template-1) as default background pattern
   const [bgTemplate, setBgTemplate] = useState(
     () => localStorage.getItem('selected_bg_template') || 'bg-template-1'
   );
@@ -60,8 +61,6 @@ const HomePage = () => {
 
   return (
     <div className={`min-h-screen ${bgTemplate} ${isDarkBg ? 'text-slate-100' : 'text-slate-900'} flex flex-col justify-between items-center selection:bg-slate-900 selection:text-white transition-colors duration-300 relative overflow-x-hidden p-4 sm:p-6`}>
-      
-      {/* Top Header Removed - Centered Layout */}
       
       {/* Main Container */}
       <main className="max-w-md w-full my-auto animate-fade-in py-6">
