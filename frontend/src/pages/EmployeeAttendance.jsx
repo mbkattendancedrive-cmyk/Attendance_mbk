@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import API from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { 
-  Calendar, 
   Clock, 
   Upload, 
   CheckCircle2, 
@@ -12,14 +11,12 @@ import {
   LogOut as LogOutIcon, 
   Eye, 
   X, 
-  UserCheck, 
   History,
   FileImage,
   Building2,
   Check,
   Camera,
-  MapPin,
-  Map
+  MapPin
 } from 'lucide-react';
 
 const EmployeeAttendance = () => {
@@ -44,10 +41,6 @@ const EmployeeAttendance = () => {
   // Photo viewer modal state
   const [viewPhotoUrl, setViewPhotoUrl] = useState(null);
 
-  useEffect(() => {
-    fetchAttendanceData();
-  }, []);
-
   const fetchAttendanceData = async () => {
     try {
       setLoading(true);
@@ -66,6 +59,10 @@ const EmployeeAttendance = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchAttendanceData();
+  }, []);
 
   const handleGetLocation = () => {
     setLocationLoading(true);

@@ -17,10 +17,6 @@ const EmployeeDashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchMyTasks();
-  }, []);
-
   const fetchMyTasks = async () => {
     try {
       setLoading(true);
@@ -32,6 +28,10 @@ const EmployeeDashboard = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchMyTasks();
+  }, []);
 
   const assignedCount = tasks.length;
   const pendingCount = tasks.filter(t => t.status === 'Pending').length;

@@ -43,10 +43,6 @@ const IDCardsPage = () => {
   const [uploadError, setUploadError] = useState(null);
   const [uploadSuccess, setUploadSuccess] = useState(null);
 
-  useEffect(() => {
-    fetchEmployees();
-  }, [user]);
-
   const fetchEmployees = async () => {
     try {
       setLoading(true);
@@ -63,6 +59,10 @@ const IDCardsPage = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchEmployees();
+  }, [user]);
 
   const generateAndSaveQR = async (emp) => {
     try {

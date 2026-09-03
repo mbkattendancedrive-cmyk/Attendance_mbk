@@ -7,10 +7,6 @@ const ActivityLogsPage = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
-  useEffect(() => {
-    fetchLogs();
-  }, []);
-
   const fetchLogs = async () => {
     try {
       setLoading(true);
@@ -22,6 +18,10 @@ const ActivityLogsPage = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchLogs();
+  }, []);
 
   const filteredLogs = logs.filter((log) => {
     return (

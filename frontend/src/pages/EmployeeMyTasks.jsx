@@ -30,10 +30,6 @@ const EmployeeMyTasks = () => {
     }
   };
 
-  useEffect(() => {
-    fetchMyTasks();
-  }, []);
-
   const fetchMyTasks = async () => {
     try {
       setLoading(true);
@@ -45,6 +41,10 @@ const EmployeeMyTasks = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchMyTasks();
+  }, []);
 
   const handleStatusChange = async (taskId, newStatus) => {
     try {

@@ -41,10 +41,6 @@ const AttendanceManagement = () => {
 
   const departments = ['Marketing', 'Telecalling', 'IT'];
 
-  useEffect(() => {
-    fetchAdminAttendance();
-  }, [filterDate, departmentFilter, statusFilter, searchTerm]);
-
   const fetchAdminAttendance = async () => {
     try {
       setLoading(true);
@@ -67,6 +63,10 @@ const AttendanceManagement = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchAdminAttendance();
+  }, [filterDate, departmentFilter, statusFilter, searchTerm]);
 
   const openPhotoModal = (attendance) => {
     let token = '';

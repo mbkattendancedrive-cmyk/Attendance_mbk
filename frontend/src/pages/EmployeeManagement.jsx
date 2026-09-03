@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import API from '../services/api';
 import IDCardModal from '../components/IDCardModal';
 import { 
@@ -8,7 +8,6 @@ import {
   Search, 
   Plus, 
   Edit3, 
-  QrCode, 
   CheckCircle2, 
   XCircle, 
   Award, 
@@ -36,6 +35,7 @@ import {
 
 const EmployeeManagement = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -76,7 +76,7 @@ const EmployeeManagement = () => {
     } catch (err) {
       if (err.response?.status === 403) {
         alert('Unauthorized Action: Changing employee passwords requires Admin privileges. Please sign in as Admin (admin@company.com).');
-        window.location.href = '/login';
+        navigate('/login');
       } else {
         alert(err.response?.data?.message || 'Failed to update password');
       }
@@ -118,13 +118,6 @@ const EmployeeManagement = () => {
   const [formError, setFormError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
 
-  useEffect(() => {
-    fetchEmployees();
-    if (searchParams.get('add') === 'true') {
-      setShowAddModal(true);
-    }
-  }, [searchParams]);
-
   const fetchEmployees = async () => {
     try {
       setLoading(true);
@@ -136,6 +129,13 @@ const EmployeeManagement = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchEmployees();
+    if (searchParams.get('add') === 'true') {
+      setShowAddModal(true);
+    }
+  }, [searchParams]);
 
   const handleToggleStatus = async () => {
     if (!confirmStatusEmp) return;
