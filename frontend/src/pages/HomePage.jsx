@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import BackgroundSelector, { BACKGROUND_TEMPLATES } from '../components/BackgroundSelector';
 import { 
   Lock, 
   Mail, 
@@ -18,6 +19,10 @@ const HomePage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const [bgTemplate, setBgTemplate] = useState(
+    () => localStorage.getItem('selected_bg_template') || 'bg-template-1'
+  );
 
   const { user, login } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -52,16 +57,19 @@ const HomePage = () => {
     }
   };
 
+  const currentTemplate = BACKGROUND_TEMPLATES.find(t => t.id === bgTemplate);
+  const isDarkBg = currentTemplate?.isDark;
+
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between selection:bg-slate-900 selection:text-white">
+    <div className={`min-h-screen ${bgTemplate} ${isDarkBg ? 'text-slate-100' : 'text-slate-900'} flex flex-col justify-between selection:bg-slate-900 selection:text-white transition-colors duration-300 relative overflow-x-hidden`}>
       
       {/* Header */}
-      <header className="bg-white border-b border-slate-200/80 py-4 px-6 shadow-2xs">
+      <header className={`${isDarkBg ? 'bg-slate-900/90 border-slate-800' : 'bg-white border-slate-200/80'} border-b py-4 px-6 shadow-2xs backdrop-blur-md transition-colors`}>
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-4">
             <img src="/sm_groups_logo.png" alt="THE SM GROUPS" className="h-16 object-contain" />
             <div>
-              <h1 className="text-xl font-extrabold text-slate-900 tracking-tight leading-none">THE SM GROUPS</h1>
+              <h1 className={`text-xl font-extrabold ${isDarkBg ? 'text-white' : 'text-slate-900'} tracking-tight leading-none`}>THE SM GROUPS</h1>
               <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-1">Enterprise Portal</p>
             </div>
           </Link>
@@ -74,35 +82,35 @@ const HomePage = () => {
           
           {/* Left Side: Brand Overview */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 bg-slate-100 border border-slate-200/80 px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-700">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <div className={`inline-flex items-center gap-2 ${isDarkBg ? 'bg-slate-800/90 border-slate-700 text-slate-200' : 'bg-white/90 border-slate-200/80 text-slate-700'} border px-3.5 py-1.5 rounded-full text-xs font-bold shadow-2xs`}>
+              <ShieldCheck className="w-4 h-4 text-emerald-500" />
               <span>Official Enterprise Workspace Portal</span>
             </div>
 
             <div className="space-y-3">
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+              <h2 className={`text-3xl sm:text-4xl font-extrabold ${isDarkBg ? 'text-white' : 'text-slate-900'} tracking-tight leading-tight`}>
                 Unified Workforce & Identity Management
               </h2>
-              <p className="text-sm text-slate-600 leading-relaxed max-w-xl mx-auto lg:mx-0">
+              <p className={`text-sm ${isDarkBg ? 'text-slate-300' : 'text-slate-600'} leading-relaxed max-w-xl mx-auto lg:mx-0`}>
                 Access your corporate account, real-time attendance tracking, digital credentials, and performance records through a single secure portal.
               </p>
             </div>
 
             {/* Feature Pills */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-left max-w-lg mx-auto lg:mx-0">
-              <div className="p-3 rounded-xl bg-white border border-slate-200/80 flex items-start gap-3 shadow-2xs">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+              <div className={`p-3 rounded-xl ${isDarkBg ? 'bg-slate-900/80 border-slate-800 text-white' : 'bg-white border-slate-200/80 text-slate-900'} border flex items-start gap-3 shadow-2xs`}>
+                <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-xs font-bold text-slate-900">Secure Authentication</h4>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Encrypted role-based access for all team members.</p>
+                  <h4 className="text-xs font-bold">Secure Authentication</h4>
+                  <p className={`text-[11px] ${isDarkBg ? 'text-slate-400' : 'text-slate-500'} mt-0.5`}>Encrypted role-based access for all team members.</p>
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-white border border-slate-200/80 flex items-start gap-3 shadow-2xs">
-                <CheckCircle2 className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
+              <div className={`p-3 rounded-xl ${isDarkBg ? 'bg-slate-900/80 border-slate-800 text-white' : 'bg-white border-slate-200/80 text-slate-900'} border flex items-start gap-3 shadow-2xs`}>
+                <CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-xs font-bold text-slate-900">Digital Credentials</h4>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Instant access to verified corporate ID cards.</p>
+                  <h4 className="text-xs font-bold">Digital Credentials</h4>
+                  <p className={`text-[11px] ${isDarkBg ? 'text-slate-400' : 'text-slate-500'} mt-0.5`}>Instant access to verified corporate ID cards.</p>
                 </div>
               </div>
             </div>
@@ -110,7 +118,7 @@ const HomePage = () => {
 
           {/* Right Side: Unified Sign-In Form */}
           <div className="lg:col-span-5 w-full max-w-md mx-auto">
-            <div className="bg-white rounded-3xl p-7 sm:p-8 border-2 border-slate-300/90 shadow-xl space-y-6">
+            <div className="bg-white rounded-3xl p-7 sm:p-8 border-2 border-slate-300/90 shadow-2xl space-y-6">
               
               <div className="text-center space-y-3">
                 <div className="w-28 h-28 bg-white p-3 rounded-3xl border-2 border-slate-200/90 shadow-md inline-flex items-center justify-center">
@@ -129,7 +137,7 @@ const HomePage = () => {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4 text-slate-900">
                 <div className="space-y-1.5">
                   <label className="block text-xs font-bold text-slate-700">
                     Employee ID or Email Address
@@ -200,8 +208,14 @@ const HomePage = () => {
         </div>
       </main>
 
+      {/* Interactive Background Template Switcher Widget */}
+      <BackgroundSelector
+        selectedTemplate={bgTemplate}
+        onSelectTemplate={setBgTemplate}
+      />
+
       {/* Footer */}
-      <footer className="py-4 text-center text-xs font-normal text-slate-400 border-t border-slate-200/80 bg-white">
+      <footer className={`py-4 text-center text-xs font-normal ${isDarkBg ? 'bg-slate-900/90 text-slate-400 border-slate-800' : 'bg-white text-slate-400 border-slate-200/80'} border-t backdrop-blur-md transition-colors`}>
         © {new Date().getFullYear()} THE SM GROUPS • Enterprise Workforce Platform
       </footer>
 

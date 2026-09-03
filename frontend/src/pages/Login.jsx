@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import BackgroundSelector, { BACKGROUND_TEMPLATES } from '../components/BackgroundSelector';
 import { Lock, Mail, AlertCircle, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 const Login = () => {
@@ -9,6 +10,10 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const [bgTemplate, setBgTemplate] = useState(
+    () => localStorage.getItem('selected_bg_template') || 'bg-template-1'
+  );
 
   const { user, login } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -43,16 +48,19 @@ const Login = () => {
     }
   };
 
+  const currentTemplate = BACKGROUND_TEMPLATES.find(t => t.id === bgTemplate);
+  const isDarkBg = currentTemplate?.isDark;
+
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between selection:bg-slate-900 selection:text-white">
+    <div className={`min-h-screen ${bgTemplate} ${isDarkBg ? 'text-slate-100' : 'text-slate-900'} flex flex-col justify-between selection:bg-slate-900 selection:text-white transition-colors duration-300 relative overflow-x-hidden`}>
       
       {/* Header */}
-      <header className="bg-white border-b border-slate-200/80 py-4 px-6 shadow-2xs">
+      <header className={`${isDarkBg ? 'bg-slate-900/90 border-slate-800' : 'bg-white border-slate-200/80'} border-b py-4 px-6 shadow-2xs backdrop-blur-md transition-colors`}>
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-4">
             <img src="/sm_groups_logo.png" alt="THE SM GROUPS" className="h-16 object-contain" />
             <div>
-              <h1 className="text-xl font-extrabold text-slate-900 tracking-tight leading-none">THE SM GROUPS</h1>
+              <h1 className={`text-xl font-extrabold ${isDarkBg ? 'text-white' : 'text-slate-900'} tracking-tight leading-none`}>THE SM GROUPS</h1>
               <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-1">Enterprise Portal</p>
             </div>
           </Link>
@@ -61,7 +69,7 @@ const Login = () => {
 
       {/* Main Container */}
       <main className="max-w-md mx-auto w-full px-4 sm:px-6 py-10 my-auto">
-        <div className="bg-white rounded-3xl p-7 sm:p-8 border-2 border-slate-300/90 shadow-xl space-y-6 animate-fade-in">
+        <div className="bg-white rounded-3xl p-7 sm:p-8 border-2 border-slate-300/90 shadow-2xl space-y-6 animate-fade-in text-slate-900">
           
           <div className="text-center space-y-4">
             <div className="w-28 h-28 bg-white p-3 rounded-3xl border-2 border-slate-200/90 shadow-md inline-flex items-center justify-center">
@@ -148,8 +156,14 @@ const Login = () => {
         </div>
       </main>
 
+      {/* Interactive Background Template Switcher Widget */}
+      <BackgroundSelector
+        selectedTemplate={bgTemplate}
+        onSelectTemplate={setBgTemplate}
+      />
+
       {/* Footer */}
-      <footer className="py-4 text-center text-xs font-normal text-slate-400 border-t border-slate-200/80 bg-white">
+      <footer className={`py-4 text-center text-xs font-normal ${isDarkBg ? 'bg-slate-900/90 text-slate-400 border-slate-800' : 'bg-white text-slate-400 border-slate-200/80'} border-t backdrop-blur-md transition-colors`}>
         © {new Date().getFullYear()} THE SM GROUPS • Enterprise Workforce Platform
       </footer>
 
