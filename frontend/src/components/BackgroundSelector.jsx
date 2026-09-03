@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import { Palette, Check, Sparkles } from 'lucide-react';
 
 export const BACKGROUND_TEMPLATES = [
-  { id: 'bg-template-1', name: '1. Corporate Dot Matrix', isDark: false, desc: 'Sleek radial dot grid' },
-  { id: 'bg-template-2', name: '2. Blueprint Grid', isDark: false, desc: 'Architectural tech grid' },
-  { id: 'bg-template-3', name: '3. Glassmorphic Mesh Orbs', isDark: true, desc: 'Glowing glass orbs' },
-  { id: 'bg-template-4', name: '4. Hexagonal Tech Mesh', isDark: true, desc: 'Honeycomb cyber grid' },
-  { id: 'bg-template-5', name: '5. Executive Dark Veil', isDark: true, desc: 'Midnight radial spotlight' },
-  { id: 'bg-template-6', name: '6. Modern Crosshatch Weave', isDark: false, desc: 'Diagonal crosshatch' },
-  { id: 'bg-template-7', name: '7. Aurora Pastel Mesh', isDark: false, desc: 'Soft pastel gradient' },
-  { id: 'bg-template-8', name: '8. Isometric Geometric Lines', isDark: false, desc: '3D isometric mesh' },
-  { id: 'bg-template-9', name: '9. Deep Tech Circuit Glow', isDark: true, desc: 'Cyber cyan dots' },
-  { id: 'bg-template-10', name: '10. Clean Enterprise Canvas', isDark: false, desc: 'Ultra-clean canvas' },
+  { id: 'bg-template-1', name: '1. Modern Crosshatch Weave (Default)', isDark: false, desc: 'User choice favorite diagonal crosshatch' },
+  { id: 'bg-template-2', name: '2. Soft Waves & Ambient Mesh', isDark: false, desc: 'Soft pastel gradient mesh' },
+  { id: 'bg-template-3', name: '3. Architectural Micro-Grid', isDark: false, desc: 'Precision 24px tech micro-grid' },
+  { id: 'bg-template-4', name: '4. Diamond Geometric Lattice', isDark: false, desc: 'Crisp diamond lattice mesh' },
+  { id: 'bg-template-5', name: '5. Polka Grid Matrix', isDark: false, desc: 'Classic slate polka dots matrix' },
+  { id: 'bg-template-6', name: '6. Chevron Stripes Weave', isDark: false, desc: 'Chevron diagonal stripe grid' },
+  { id: 'bg-template-7', name: '7. Midnight Obsidian Mesh', isDark: true, desc: 'Dark obsidian slate weave' },
+  { id: 'bg-template-8', name: '8. Glassmorphic Ambient Orbs', isDark: true, desc: 'Glowing blurred ambient orbs' },
+  { id: 'bg-template-9', name: '9. Deep Tech Circuit Glow', isDark: true, desc: 'Cyber cyan circuit dots' },
+  { id: 'bg-template-10', name: '10. Velvet Indigo Soft Glow', isDark: true, desc: 'Deep luxury velvet indigo spotlight' },
 ];
 
 const BackgroundSelector = ({ selectedTemplate, onSelectTemplate }) => {
@@ -20,9 +20,9 @@ const BackgroundSelector = ({ selectedTemplate, onSelectTemplate }) => {
   return (
     <div className="fixed bottom-5 right-5 z-[100] animate-fade-in">
       {isOpen && (
-        <div className="mb-3 bg-white/95 backdrop-blur-md border border-slate-300 rounded-3xl p-4 shadow-2xl w-80 sm:w-96 space-y-3 animate-fade-in-up">
+        <div className="mb-3 bg-white/95 backdrop-blur-md border border-slate-300 rounded-3xl p-4 shadow-2xl w-80 sm:w-96 space-y-3 animate-fade-in-up text-slate-900">
           <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
-            <div className="flex items-center gap-2 text-slate-900 font-extrabold text-sm">
+            <div className="flex items-center gap-2 font-extrabold text-sm text-slate-900">
               <Sparkles className="w-4 h-4 text-indigo-600" />
               <span>Choose Background Pattern</span>
             </div>
@@ -35,7 +35,7 @@ const BackgroundSelector = ({ selectedTemplate, onSelectTemplate }) => {
           </div>
 
           <p className="text-[11px] text-slate-500 font-medium leading-normal">
-            Click any of the 10 custom patterns below to switch the Login & Home Page background live:
+            Click any of the 10 custom patterns below to switch the Login background live:
           </p>
 
           <div className="max-h-72 overflow-y-auto pr-1 space-y-1.5 custom-scrollbar">

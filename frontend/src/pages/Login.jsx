@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import BackgroundSelector, { BACKGROUND_TEMPLATES } from '../components/BackgroundSelector';
 import { Lock, Mail, AlertCircle, Eye, EyeOff, ArrowRight } from 'lucide-react';
@@ -52,32 +52,32 @@ const Login = () => {
   const isDarkBg = currentTemplate?.isDark;
 
   return (
-    <div className={`min-h-screen ${bgTemplate} ${isDarkBg ? 'text-slate-100' : 'text-slate-900'} flex flex-col justify-between selection:bg-slate-900 selection:text-white transition-colors duration-300 relative overflow-x-hidden`}>
+    <div className={`min-h-screen ${bgTemplate} ${isDarkBg ? 'text-slate-100' : 'text-slate-900'} flex flex-col justify-between items-center selection:bg-slate-900 selection:text-white transition-colors duration-300 relative overflow-x-hidden p-4 sm:p-6`}>
       
-      {/* Header */}
-      <header className={`${isDarkBg ? 'bg-slate-900/90 border-slate-800' : 'bg-white border-slate-200/80'} border-b py-4 px-6 shadow-2xs backdrop-blur-md transition-colors`}>
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-4">
-            <img src="/sm_groups_logo.png" alt="THE SM GROUPS" className="h-16 object-contain" />
-            <div>
-              <h1 className={`text-xl font-extrabold ${isDarkBg ? 'text-white' : 'text-slate-900'} tracking-tight leading-none`}>THE SM GROUPS</h1>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-1">Enterprise Portal</p>
-            </div>
-          </Link>
-        </div>
-      </header>
+      {/* Top Header Removed - Centered Layout */}
 
       {/* Main Container */}
-      <main className="max-w-md mx-auto w-full px-4 sm:px-6 py-10 my-auto">
-        <div className="bg-white rounded-3xl p-7 sm:p-8 border-2 border-slate-300/90 shadow-2xl space-y-6 animate-fade-in text-slate-900">
+      <main className="max-w-md w-full my-auto animate-fade-in py-6">
+        <div className="bg-white rounded-3xl p-7 sm:p-9 border-2 border-slate-300/90 shadow-2xl space-y-6 text-slate-900">
           
-          <div className="text-center space-y-4">
+          {/* Brand Header Inside Login Card */}
+          <div className="text-center space-y-3">
             <div className="w-28 h-28 bg-white p-3 rounded-3xl border-2 border-slate-200/90 shadow-md inline-flex items-center justify-center">
               <img src="/sm_groups_logo.png" alt="THE SM GROUPS" className="w-full h-full object-contain" />
             </div>
-            <div>
-              <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Sign In to Your Workspace</h2>
-              <p className="text-xs text-slate-500 font-medium mt-1">Enterprise Management & Workforce Portal</p>
+
+            <div className="space-y-1">
+              <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                THE SM GROUPS
+              </h1>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                Enterprise Portal
+              </p>
+            </div>
+
+            <div className="pt-2 border-t border-slate-100">
+              <h2 className="text-lg font-bold text-slate-800 tracking-tight">Sign In to Your Workspace</h2>
+              <p className="text-xs text-slate-500 font-medium mt-0.5">Enter your credentials to access your dashboard</p>
             </div>
           </div>
 
@@ -163,7 +163,7 @@ const Login = () => {
       />
 
       {/* Footer */}
-      <footer className={`py-4 text-center text-xs font-normal ${isDarkBg ? 'bg-slate-900/90 text-slate-400 border-slate-800' : 'bg-white text-slate-400 border-slate-200/80'} border-t backdrop-blur-md transition-colors`}>
+      <footer className={`py-3 text-center text-xs font-medium ${isDarkBg ? 'text-slate-400' : 'text-slate-500'} transition-colors`}>
         © {new Date().getFullYear()} THE SM GROUPS • Enterprise Workforce Platform
       </footer>
 
