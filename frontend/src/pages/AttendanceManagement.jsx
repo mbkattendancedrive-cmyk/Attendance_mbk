@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import API from '../services/api';
 import { 
   Users, 
@@ -390,13 +391,13 @@ const AttendanceManagement = () => {
         )}
       </div>
 
-      {/* Photo Viewer Modal */}
-      {viewPhotoUrl && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 max-w-lg w-full space-y-4 shadow-xl animate-fade-in">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+      {/* Secure Photo Viewer Modal */}
+      {viewPhotoUrl && createPortal(
+        <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fade-in">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 max-w-lg w-full relative space-y-4 shadow-2xl my-auto">
+            <div className="flex justify-between items-start">
               <div className="flex items-center gap-2">
-                <FileImage className="w-5 h-5 text-slate-700" />
+                <FileImage className="w-5 h-5 text-indigo-600" />
                 <div>
                   <h4 className="font-bold text-slate-900 text-base">Check-In Photo Evidence</h4>
                   <p className="text-xs text-slate-500 font-medium">{photoModalTitle}</p>
@@ -432,7 +433,8 @@ const AttendanceManagement = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>

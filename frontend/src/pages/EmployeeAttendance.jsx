@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { createPortal } from 'react-dom';
 import API from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { 
@@ -677,13 +678,13 @@ const EmployeeAttendance = () => {
         )}
       </div>
 
-      {/* Secure Photo Viewer Modal */}
-      {viewPhotoUrl && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 max-w-lg w-full shadow-xl space-y-4 animate-fade-in text-left">
+      {/* Photo Viewer Modal */}
+      {viewPhotoUrl && createPortal(
+        <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fade-in">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 max-w-lg w-full relative space-y-4 shadow-2xl my-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
-                <FileImage className="w-5 h-5 text-slate-700" />
+                <FileImage className="w-5 h-5 text-indigo-600" />
                 <h4 className="font-bold text-slate-900 text-base">Check-In Photo Evidence</h4>
               </div>
               <button
@@ -715,7 +716,8 @@ const EmployeeAttendance = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>

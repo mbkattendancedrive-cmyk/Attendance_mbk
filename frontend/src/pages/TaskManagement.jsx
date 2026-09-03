@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
 import API from '../services/api';
 import { 
@@ -446,8 +447,8 @@ const TaskManagement = () => {
       )}
 
       {/* Delete Confirmation Modal */}
-      {deleteTaskObj && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fade-in">
+      {deleteTaskObj && createPortal(
+        <div className="fixed inset-0 z-[100] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fade-in">
           <div className="bg-white border border-slate-200 rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-2xl my-auto">
             <div className="flex items-center gap-2 text-rose-600">
               <AlertTriangle className="w-6 h-6 shrink-0" />
@@ -476,12 +477,13 @@ const TaskManagement = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Add / Edit Task Modal */}
-      {(showAddModal || editTask) && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fade-in">
+      {(showAddModal || editTask) && createPortal(
+        <div className="fixed inset-0 z-[100] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fade-in">
           <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 max-w-lg w-full relative space-y-4 shadow-2xl my-auto max-h-[90vh] overflow-y-auto custom-scrollbar">
             <button
               onClick={() => {
@@ -602,7 +604,8 @@ const TaskManagement = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
