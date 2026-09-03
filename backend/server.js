@@ -11,8 +11,12 @@ import activityLogRoutes from './routes/activityLogRoutes.js';
 import canvaRoutes from './routes/canvaRoutes.js';
 import attendanceRoutes from './routes/attendanceRoutes.js';
 
-// Connect to database
-connectDB();
+import { syncAllEmployeePasswords } from './utils/syncEmployeePasswords.js';
+
+// Connect to database and sync passwords
+connectDB().then(() => {
+  syncAllEmployeePasswords();
+});
 
 const app = express();
 

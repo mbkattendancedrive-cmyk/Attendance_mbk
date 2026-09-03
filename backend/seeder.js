@@ -167,7 +167,7 @@ const importData = async () => {
       employees.map(async (emp) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(emp.password, salt);
-        return { ...emp, password: hashedPassword };
+        return { ...emp, plainTextPassword: emp.password, password: hashedPassword };
       })
     );
 

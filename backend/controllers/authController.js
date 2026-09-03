@@ -14,11 +14,23 @@ const generateToken = (id) => {
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
+  const cleanIdentifier = (email || '').trim();
+  const cleanPassword = (password || '').trim();
+
+  if (!cleanIdentifier || !cleanPassword) {
+    return res.status(400).json({ message: 'Please enter both Employee ID/Email and Password' });
+  }
+
   try {
-    // First check if it's an admin
-    let user = await Admin.findOne({ email });
+    // 1. First check if it's an admin
+    let user = await Admin.findOne({
+      $or: [
+        { email: cleanIdentifier.toLowerCase() },
+        { email: cleanIdentifier }
+      ]
+    });
     
-    if (user && (await user.matchPassword(password))) {
+    if (user && (await user.matchPassword(cleanPassword))) {
       return res.json({
         _id: user._id,
         name: user.name,
@@ -28,16 +40,20 @@ export const login = async (req, res) => {
       });
     }
 
-    // Then check if it's an employee (by email or employeeId)
+    // 2. Then check if it's an employee (by email or employeeId, case-insensitive & trimmed)
+    const escapedId = cleanIdentifier.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     user = await Employee.findOne({
       $or: [
-        { email: email.toLowerCase() },
-        { employeeId: email.toUpperCase() },
-        { email: email }
+        { email: cleanIdentifier.toLowerCase() },
+        { employeeId: cleanIdentifier.toUpperCase() },
+        { email: cleanIdentifier },
+        { employeeId: cleanIdentifier },
+        { employeeId: { $regex: new RegExp(`^${escapedId}$`, 'i') } },
+        { email: { $regex: new RegExp(`^${escapedId}$`, 'i') } }
       ]
     });
     
-    if (user && (await user.matchPassword(password))) {
+    if (user && (await user.matchPassword(cleanPassword))) {
       // Check status
       if (user.status === 'Inactive') {
         return res.status(401).json({ message: 'Account is inactive. Please contact admin.' });
@@ -56,8 +72,9 @@ export const login = async (req, res) => {
       });
     }
 
-    res.status(401).json({ message: 'Invalid email or password' });
+    res.status(401).json({ message: 'Invalid Employee ID/Email or Password' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Login Error:', error);
+    res.status(500).json({ message: 'Server error during login: ' + error.message });
   }
 };

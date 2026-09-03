@@ -148,14 +148,34 @@ export const updateEmployee = async (req, res) => {
     const employee = await Employee.findById(req.params.id);
 
     if (employee) {
-      employee.name = req.body.name || employee.name;
-      employee.phone = req.body.phone || employee.phone;
-      employee.department = req.body.department || employee.department;
-      employee.designation = req.body.designation || employee.designation;
-      employee.address = req.body.address !== undefined ? req.body.address : employee.address;
-      employee.emergencyContact = req.body.emergencyContact !== undefined ? req.body.emergencyContact : employee.emergencyContact;
-      employee.bloodGroup = req.body.bloodGroup || employee.bloodGroup;
+      if (req.body.name !== undefined) employee.name = req.body.name.trim();
+      if (req.body.phone !== undefined) employee.phone = req.body.phone.trim();
+      if (req.body.department !== undefined) employee.department = req.body.department;
+      if (req.body.designation !== undefined) employee.designation = req.body.designation.trim();
+      if (req.body.address !== undefined) employee.address = req.body.address;
+      if (req.body.emergencyContact !== undefined) employee.emergencyContact = req.body.emergencyContact;
+      if (req.body.bloodGroup !== undefined) employee.bloodGroup = req.body.bloodGroup;
       if (req.body.profilePhoto !== undefined) employee.profilePhoto = req.body.profilePhoto;
+
+      // Handle Email Update with uniqueness check
+      if (req.body.email && req.body.email.trim().toLowerCase() !== employee.email) {
+        const newEmail = req.body.email.trim().toLowerCase();
+        const emailExists = await Employee.findOne({ email: newEmail, _id: { $ne: employee._id } });
+        if (emailExists) {
+          return res.status(400).json({ message: 'Another employee with this email already exists' });
+        }
+        employee.email = newEmail;
+      }
+
+      // Handle Employee ID Update with uniqueness check
+      if (req.body.employeeId && req.body.employeeId.trim().toUpperCase() !== employee.employeeId) {
+        const newEmpId = req.body.employeeId.trim().toUpperCase();
+        const idExists = await Employee.findOne({ employeeId: newEmpId, _id: { $ne: employee._id } });
+        if (idExists) {
+          return res.status(400).json({ message: 'Another employee with this Employee ID already exists' });
+        }
+        employee.employeeId = newEmpId;
+      }
 
       // If a new ID card image is being uploaded, save base64 to DB and upload to Drive
       if (req.body.idCardImage !== undefined) {
@@ -174,15 +194,15 @@ export const updateEmployee = async (req, res) => {
         }).catch(err => console.error('Drive upload failed silently:', err.message));
       }
 
-      if (req.body.dateOfBirth) {
-        employee.dateOfBirth = req.body.dateOfBirth;
+      if (req.body.dateOfBirth !== undefined) {
+        employee.dateOfBirth = req.body.dateOfBirth || null;
       }
-      if (req.body.joiningDate) {
+      if (req.body.joiningDate !== undefined && req.body.joiningDate !== '') {
         employee.joiningDate = req.body.joiningDate;
       }
-      if (req.body.password) {
-        employee.password = req.body.password;
-        employee.plainTextPassword = req.body.password;
+      if (req.body.password && req.body.password.trim() !== '') {
+        employee.password = req.body.password.trim();
+        employee.plainTextPassword = req.body.password.trim();
       }
 
       const updatedEmployee = await employee.save();
@@ -192,7 +212,7 @@ export const updateEmployee = async (req, res) => {
         action: 'Updated Employee',
         performedBy: `Admin: ${req.user?.name || 'Admin'}`,
         employeeId: employee._id,
-        description: `Updated details for ${employee.name}`
+        description: `Updated details for ${employee.name} (${employee.employeeId})`
       });
 
       res.json(updatedEmployee);

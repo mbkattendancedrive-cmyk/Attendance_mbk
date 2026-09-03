@@ -57,6 +57,13 @@ const EmployeeManagement = () => {
     setVisiblePasswords(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
+  const handleCopyToClipboard = (text, label) => {
+    if (!text) return;
+    navigator.clipboard.writeText(text.trim());
+    setSuccessMessage(`${label} copied to clipboard!`);
+    setTimeout(() => setSuccessMessage(''), 2500);
+  };
+
   const handleSaveVaultPassword = async (empId) => {
     if (!newPasswordInput.trim()) return;
     try {
@@ -67,7 +74,12 @@ const EmployeeManagement = () => {
       setNewPasswordInput('');
       fetchEmployees();
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to update password');
+      if (err.response?.status === 403) {
+        alert('Unauthorized Action: Changing employee passwords requires Admin privileges. Please sign in as Admin (admin@company.com).');
+        window.location.href = '/login';
+      } else {
+        alert(err.response?.data?.message || 'Failed to update password');
+      }
     }
   };
 
@@ -1174,11 +1186,27 @@ const EmployeeManagement = () => {
                       <div>
                         <div className="font-bold text-slate-900 text-sm flex items-center gap-2">
                           {emp.name}
-                          <span className="font-mono text-xs text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 font-semibold">
-                            {emp.employeeId}
-                          </span>
+                          <button
+                            onClick={() => handleCopyToClipboard(emp.employeeId, 'Employee ID')}
+                            title="Copy Employee ID"
+                            className="font-mono text-xs text-slate-700 hover:text-indigo-600 bg-slate-100 hover:bg-indigo-50 px-2 py-0.5 rounded border border-slate-200 hover:border-indigo-300 font-semibold inline-flex items-center gap-1 transition-all group"
+                          >
+                            <span>{emp.employeeId}</span>
+                            <Copy className="w-3 h-3 text-slate-400 group-hover:text-indigo-600" />
+                          </button>
                         </div>
-                        <div className="text-xs text-slate-500 font-medium mt-0.5">{emp.email} • <span className="text-slate-700">{emp.department}</span></div>
+                        <div className="text-xs text-slate-500 font-medium mt-1 flex items-center gap-2">
+                          <span>{emp.email}</span>
+                          <button
+                            onClick={() => handleCopyToClipboard(emp.email, 'Email')}
+                            title="Copy Email"
+                            className="p-0.5 text-slate-400 hover:text-indigo-600 rounded transition-colors"
+                          >
+                            <Copy className="w-3 h-3" />
+                          </button>
+                          <span>•</span>
+                          <span className="text-slate-700 font-semibold">{emp.department}</span>
+                        </div>
                       </div>
                     </div>
 
@@ -1220,6 +1248,14 @@ const EmployeeManagement = () => {
                             title={visiblePasswords[emp._id] ? "Hide Password" : "Show Password"}
                           >
                             {visiblePasswords[emp._id] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
+
+                          <button
+                            onClick={() => handleCopyToClipboard(emp.plainTextPassword || 'Password@123', 'Password')}
+                            className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-white rounded-lg transition-colors shadow-2xs border border-slate-200/60"
+                            title="Copy Password"
+                          >
+                            <Copy className="w-4 h-4" />
                           </button>
 
                           <button

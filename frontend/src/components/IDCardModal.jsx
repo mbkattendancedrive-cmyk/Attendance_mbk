@@ -1,10 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import { createPortal } from 'react-dom';
 import QRCode from 'qrcode';
 import { X, Printer, Download, Layers, RefreshCw, ExternalLink, Sparkles, Edit3, QrCode } from 'lucide-react';
 import API from '../services/api';
+import { AuthContext } from '../context/AuthContext';
 
 const IDCardModal = ({ employee, onClose }) => {
+  const { user } = useContext(AuthContext);
+  const isAdmin = user?.role === 'admin';
   const frontCanvasRef = useRef(null);
   const backCanvasRef = useRef(null);
 
@@ -16,16 +19,15 @@ const IDCardModal = ({ employee, onClose }) => {
   const [canvaStatusMsg, setCanvaStatusMsg] = useState('');
   const [canvaAuthUrl, setCanvaAuthUrl] = useState('');
 
-  if (!employee) return null;
-
-  const verificationUrl = `${window.location.origin}/verify/${employee.employeeId}`;
+  const verificationUrl = employee ? `${window.location.origin}/verify/${employee.employeeId}` : '';
 
   // Formatted date of birth or default
-  const formattedDOB = employee.dateOfBirth
+  const formattedDOB = employee?.dateOfBirth
     ? new Date(employee.dateOfBirth).toLocaleDateString('en-GB')
     : '02/04/2004';
 
   useEffect(() => {
+    if (!employee) return;
     let isMounted = true;
 
     const drawCards = async () => {
@@ -332,6 +334,8 @@ const IDCardModal = ({ employee, onClose }) => {
     }
   };
 
+  if (!employee) return null;
+
   return createPortal(
     <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
       <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 max-w-4xl w-full max-h-[90vh] flex flex-col relative space-y-5 shadow-2xl my-auto animate-fade-in-up">
@@ -369,12 +373,14 @@ const IDCardModal = ({ employee, onClose }) => {
               >
                 Back Side
               </button>
-              <button
-                onClick={() => setActiveTab('canva')}
-                className={`px-3 py-1.5 rounded-lg transition-all ${activeTab === 'canva' ? 'bg-purple-700 text-white shadow-xs' : 'text-purple-700 hover:text-purple-900'}`}
-              >
-                Canva Live Design
-              </button>
+              {isAdmin && (
+                <button
+                  onClick={() => setActiveTab('canva')}
+                  className={`px-3 py-1.5 rounded-lg transition-all ${activeTab === 'canva' ? 'bg-purple-700 text-white shadow-xs' : 'text-purple-700 hover:text-purple-900'}`}
+                >
+                  Canva Live Design
+                </button>
+              )}
             </div>
 
             <button
@@ -432,7 +438,7 @@ const IDCardModal = ({ employee, onClose }) => {
                 )}
 
                 {/* CANVA LIVE EMBED IFRAME */}
-                {activeTab === 'canva' && (
+                {isAdmin && activeTab === 'canva' && (
                   <div className="w-full flex flex-col items-center space-y-3">
                     <div className="relative w-full h-[520px] rounded-2xl overflow-hidden border border-slate-200 shadow-xl bg-slate-900">
                       <iframe
@@ -479,7 +485,7 @@ const IDCardModal = ({ employee, onClose }) => {
           )}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="text-xs text-slate-500 font-medium">
-              HTML5 Canvas & Canva Connect API ready. Zero element shift during printing.
+              HTML5 Canvas ID Card rendering. Zero element shift during printing.
             </div>
 
             <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
@@ -491,15 +497,17 @@ const IDCardModal = ({ employee, onClose }) => {
                 Download Unique QR
               </button>
 
-              <a
-                href="https://canva.link/y2ux0vdd018dnqi"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-bold flex items-center justify-center gap-2 py-2.5 px-4 bg-purple-100 hover:bg-purple-200 text-purple-900 rounded-xl transition-all shadow-xs border border-purple-200"
-              >
-                <Edit3 className="w-4 h-4 text-purple-700" />
-                Edit Canva Design
-              </a>
+              {isAdmin && (
+                <a
+                  href="https://canva.link/y2ux0vdd018dnqi"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-bold flex items-center justify-center gap-2 py-2.5 px-4 bg-purple-100 hover:bg-purple-200 text-purple-900 rounded-xl transition-all shadow-xs border border-purple-200"
+                >
+                  <Edit3 className="w-4 h-4 text-purple-700" />
+                  Edit Canva Design
+                </a>
+              )}
 
               <button
                 onClick={handlePrint}
