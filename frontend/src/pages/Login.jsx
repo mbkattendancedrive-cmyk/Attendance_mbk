@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { Lock, Mail, AlertCircle, Eye, EyeOff, QrCode, ArrowRight } from 'lucide-react';
+import { Lock, Mail, AlertCircle, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -47,22 +47,14 @@ const Login = () => {
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between selection:bg-slate-900 selection:text-white">
       
       {/* Header */}
-      <header className="bg-white border-b border-slate-200/80 py-3.5 px-6 shadow-2xs">
+      <header className="bg-white border-b border-slate-200/80 py-4 px-6 shadow-2xs">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
-            <img src="/sm_groups_logo.png" alt="THE SM GROUPS" className="h-10 object-contain" />
+          <Link to="/" className="flex items-center gap-4">
+            <img src="/sm_groups_logo.png" alt="THE SM GROUPS" className="h-16 object-contain" />
             <div>
-              <h1 className="text-base font-bold text-slate-900 tracking-tight leading-none">THE SM GROUPS</h1>
-              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">Enterprise Portal</p>
+              <h1 className="text-xl font-extrabold text-slate-900 tracking-tight leading-none">THE SM GROUPS</h1>
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-1">Enterprise Portal</p>
             </div>
-          </Link>
-
-          <Link
-            to="/scan"
-            className="btn-secondary text-xs font-semibold"
-          >
-            <QrCode className="w-4 h-4 text-slate-600" />
-            QR Scanner Utility
           </Link>
         </div>
       </header>
@@ -71,12 +63,12 @@ const Login = () => {
       <main className="max-w-md mx-auto w-full px-4 sm:px-6 py-10 my-auto">
         <div className="bg-white rounded-3xl p-7 sm:p-8 border-2 border-slate-300/90 shadow-xl space-y-6 animate-fade-in">
           
-          <div className="text-center space-y-3">
-            <div className="w-20 h-20 bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-xs inline-flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <div className="w-28 h-28 bg-white p-3 rounded-3xl border-2 border-slate-200/90 shadow-md inline-flex items-center justify-center">
               <img src="/sm_groups_logo.png" alt="THE SM GROUPS" className="w-full h-full object-contain" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900 tracking-tight">Sign In to Your Workspace</h2>
+              <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Sign In to Your Workspace</h2>
               <p className="text-xs text-slate-500 font-medium mt-1">Enterprise Management & Workforce Portal</p>
             </div>
           </div>
