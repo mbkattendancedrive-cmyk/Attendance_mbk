@@ -387,7 +387,7 @@ const TaskManagement = () => {
                           className="fixed inset-0 z-30" 
                           onClick={() => setActiveDropdownTaskId(null)}
                         />
-                        <div className="absolute left-0 bottom-full mb-2 z-40 w-44 bg-white/95 backdrop-blur-md border border-slate-200/90 rounded-2xl shadow-2xl p-1.5 space-y-1 animate-fade-in ring-1 ring-slate-900/5">
+                        <div className="absolute left-0 bottom-full mb-1 z-40 w-44 bg-white/95 backdrop-blur-md border border-slate-200/90 rounded-2xl shadow-2xl p-1.5 space-y-1 animate-fade-in ring-1 ring-slate-900/5">
                           <div className="px-2 py-1 border-b border-slate-100 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                             Change Task Status
                           </div>
@@ -447,8 +447,8 @@ const TaskManagement = () => {
 
       {/* Delete Confirmation Modal */}
       {deleteTaskObj && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-2xl animate-fade-in">
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fade-in">
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-2xl my-auto">
             <div className="flex items-center gap-2 text-rose-600">
               <AlertTriangle className="w-6 h-6 shrink-0" />
               <h3 className="text-base font-bold text-slate-900">Delete Task</h3>
@@ -481,8 +481,8 @@ const TaskManagement = () => {
 
       {/* Add / Edit Task Modal */}
       {(showAddModal || editTask) && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 max-w-lg w-full relative space-y-5 shadow-2xl animate-fade-in">
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fade-in">
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 max-w-lg w-full relative space-y-4 shadow-2xl my-auto max-h-[90vh] overflow-y-auto custom-scrollbar">
             <button
               onClick={() => {
                 setShowAddModal(false);
