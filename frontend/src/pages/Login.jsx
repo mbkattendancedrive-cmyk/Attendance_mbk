@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import BackgroundSelector, { BACKGROUND_TEMPLATES } from '../components/BackgroundSelector';
 import { Lock, Mail, AlertCircle, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 const Login = () => {
@@ -10,11 +9,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  // Set Modern Crosshatch Weave (bg-template-1) as default background pattern
-  const [bgTemplate, setBgTemplate] = useState(
-    () => localStorage.getItem('selected_bg_template') || 'bg-template-1'
-  );
 
   const { user, login } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -49,11 +43,8 @@ const Login = () => {
     }
   };
 
-  const currentTemplate = BACKGROUND_TEMPLATES.find(t => t.id === bgTemplate);
-  const isDarkBg = currentTemplate?.isDark;
-
   return (
-    <div className={`min-h-screen ${bgTemplate} ${isDarkBg ? 'text-slate-100' : 'text-slate-900'} flex flex-col justify-between items-center selection:bg-slate-900 selection:text-white transition-colors duration-300 relative overflow-x-hidden p-4 sm:p-6`}>
+    <div className="min-h-screen bg-template-1 text-slate-900 flex flex-col justify-between items-center selection:bg-slate-900 selection:text-white relative overflow-x-hidden p-4 sm:p-6">
       
       {/* Main Container */}
       <main className="max-w-md w-full my-auto animate-fade-in py-6">
@@ -155,14 +146,8 @@ const Login = () => {
         </div>
       </main>
 
-      {/* Interactive Background Template Switcher Widget */}
-      <BackgroundSelector
-        selectedTemplate={bgTemplate}
-        onSelectTemplate={setBgTemplate}
-      />
-
       {/* Footer */}
-      <footer className={`py-3 text-center text-xs font-medium ${isDarkBg ? 'text-slate-400' : 'text-slate-500'} transition-colors`}>
+      <footer className="py-3 text-center text-xs font-medium text-slate-500">
         © {new Date().getFullYear()} THE SM GROUPS • Enterprise Workforce Platform
       </footer>
 
