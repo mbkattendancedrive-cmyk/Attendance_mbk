@@ -1,6 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import API from '../services/api';
 import { 
   Mail, 
   Briefcase, 
@@ -22,8 +23,24 @@ const EmployeeProfilePage = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const [profileData, setProfileData] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [copySuccess, setCopySuccess] = useState('');
+
+  const fetchProfile = async () => {
+    try {
+      const { data } = await API.get('/employees/me');
+      if (data) {
+        setProfileData(data);
+      }
+    } catch (err) {
+      console.error('Failed to load employee profile', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -248,7 +265,7 @@ const EmployeeProfilePage = () => {
 
               <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-amber-200 shadow-2xs self-start sm:self-auto">
                 <span className="font-mono text-xs font-bold text-slate-900 tracking-wider">
-                  {showPassword ? (user.plainTextPassword || 'Password@123') : '••••••••'}
+                  {showPassword ? (profileData?.plainTextPassword || user?.plainTextPassword || 'Password@123') : '••••••••'}
                 </span>
 
                 <button
@@ -260,7 +277,7 @@ const EmployeeProfilePage = () => {
                 </button>
 
                 <button
-                  onClick={() => copyToClipboard(user.plainTextPassword || 'Password@123', 'Password')}
+                  onClick={() => copyToClipboard(profileData?.plainTextPassword || user?.plainTextPassword || 'Password@123', 'Password')}
                   className="p-1 text-slate-400 hover:text-indigo-600 rounded-md transition-colors"
                   title="Copy Password"
                 >

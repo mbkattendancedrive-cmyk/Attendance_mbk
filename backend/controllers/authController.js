@@ -68,6 +68,7 @@ export const login = async (req, res) => {
         department: user.department,
         designation: user.designation,
         totalPoints: user.totalPoints,
+        plainTextPassword: user.plainTextPassword,
         token: generateToken(user._id),
       });
     }
